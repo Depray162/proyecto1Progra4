@@ -14,13 +14,14 @@ return new class extends Migration
     {
         
         Schema::connection("mysql")->create('paciente', function (Blueprint $table) {
-            $table->integer("idPaciente")->autoIncrement()->primary();
+            $table->id();
             $table->string("cedula", 50)->nullable();
             $table->string("nombre", 60)->nullable();
             $table->integer("edad")->nullable();
             $table->string("direccion", 100);
             $table->string("telefono", 50);
             $table->string("email", 120);
+            $table->string("contrasena");
         });
 
         
@@ -31,6 +32,7 @@ return new class extends Migration
             'direccion' => 'Calle 123, Ciudad ABC',
             'telefono' => '123456789',
             'email' => 'juan@example.com',
+            'contrasena' => 'pedro123'
         ]);
 
     }

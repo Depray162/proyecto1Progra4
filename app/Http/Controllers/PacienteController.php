@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\paciente;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
 
 class PacienteController extends Controller
 {
@@ -13,13 +14,24 @@ class PacienteController extends Controller
      */
     public function index() //Get all, devuelve todos los elementos 
     {
-        $pacientes = Paciente::all();
-        $response = [
-            "status" => 200,
-            "message" => "usuarios obtenidos correctamente",
-            "data" => $pacientes
+        $pacientes = Paciente::with(["expediente"])->get();
 
-        ];
+        if ($pacientes->isEmpty()) {
+            $response = [
+                "status" => 200,
+                "message" => "El sistema no cuenta con pacientes",
+
+            ];
+        } else {
+            $response = [
+                "status" => 200,
+                "message" => "usuarios obtenidos correctamente",
+                "data" => $pacientes
+
+            ];
+        }
+
+
         return response()->json($response, 200);
     }
 
@@ -38,56 +50,54 @@ class PacienteController extends Controller
     //Metodo post para crear un registro
     public function store(Request $request)
     {
-        $data_input = $request->input('data', null);
-    
-        if ($data_input) {
-            $data = json_decode($data_input, true);
-            $data = array_map('trim', $data);
-            $rules = [
-                'name' => 'required|alpha' //validar que los datos que se están ingresando sean string
+        $validator = validator::make($request->all(), [
+            "idPaciente" => 'required',
+            "cedula" => 'required',
+            "nombre" => 'required',
+            "edad" => 'required',
+            "direccion" => 'required',
+            "telefono" => 'required',
+            "email" => 'required|email',
+            "contrasena" => "required"
+        ]);
+
+        if ($validator->fails()) {
+            $data = [
+                'menssage' => 'error en la validacion de datos',
+                'errors ' => $validator->errors(),
+                'status' => 400
             ];
-            $isValid = \validator($data, $rules);
-    
-            if (!$isValid->fails()) {
-                $paciente = new paciente();
-                $paciente->name = $data['name'];
-                $paciente->save();
-    
-                $response = array(
-                    'status' => 201,
-                    'message' => 'Paciente creado',
-                    'paciente' => $paciente
-                );
-            } else {
-                $response = array(
-                    'status' => 406,
-                    'message' => 'Datos inválidos',
-                    'errors' => $isValid->errors()
-                );
-            }
-        } else {
-            $response = array(
-                'status' => 400,
-                'message' => 'No se encontró el objeto data'
-            );
+            return response()->json($data, 400);
+        }else{
+            $Paciente =  paciente::create([
+                "idPaciente" => $request -> idPaciente,
+                "cedula" => $request -> cedula,
+                "nombre" => $request -> nombre,
+                "edad" => $request -> edad,
+                "direccion" => $request -> direccion,
+                "telefono" => $request -> telefono,
+                "email" => $request -> email,
+                "contrasena" => $request -> contrasena,
+
+            ]);
         }
-    
-        return response()->json($response, $response['status']);
+if ($Paciente) {
     }
-    
+}
+
 
     /**
      * Display the specified resource.
      */
-    public function show(paciente $paciente)
+    public function show(Request $request, $id)
     {
-        //
+        return 'Id: ' . $id;
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(paciente $paciente)
+    public function edit(Request $request, $id)
     {
         //
     }
@@ -95,7 +105,7 @@ class PacienteController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, paciente $paciente)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -103,7 +113,7 @@ class PacienteController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(paciente $paciente)
+    public function destroy(Request $request, $id)
     {
         //
     }
