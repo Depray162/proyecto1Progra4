@@ -16,7 +16,6 @@ return new class extends Migration
      */
     public function up(): void
     {
-<<<<<<< Updated upstream
         Schema::create('medico', function (Blueprint $table) {
             $table->id('idMedico'); // Utilizamos el método id() para definir la columna autoincremental y clave primaria
             $table->integer('numColegiado')->unique(); // Usamos unique() para hacer que esta columna sea única pero no autoincremental
@@ -25,16 +24,7 @@ return new class extends Migration
             $table->string('especialidad', 60)->nullable();
             $table->string('telefono', 50);
             $table->string('email', 120);
-=======
-        Schema::connection("mysql")->create('medico', function (Blueprint $table) {
-            $table->integer("numColegiado", 50)->primary();
-            $table->string("cedula", 50)->nullable();
-            $table->string("nombre", 60)->nullable();
-            $table->string("especialidad", 60)->nullable();
-            $table->string("telefono", 50);
-            $table->string("email", 120);
             $table->foreignId("idCita")->nullable()->constrained('cita')->nullOnDelete();
->>>>>>> Stashed changes
         });
 
         DB::table('medico')->insert([
