@@ -19,23 +19,24 @@ return new class extends Migration
             $table->string("fechaSolicitud", 60);
             $table->string("fechaCita", 60);
             $table->string("horaCita", 60);
-            $table->foreignId('idPaciente')
-            ->nullable()
-            ->constrained('paciente')
-            ->nullOnDelete();
-            $table->foreignId('idMedico')
-            ->nullable()
-            ->constrained('medico')
-            ->nullOnDelete();
+            $table->unsignedBigInteger("idPaciente")->nullable(false);
+            $table->unsignedBigInteger("idMedico")->nullable(false);
+
+            $table->foreign('idPaciente')->references('idPaciente')->on('paciente');
+            $table->foreign('idMedico')->references('idMedico')->on('medico');
+           
+            
         });
 
-        /*DB::table('cita')->insert([
+        DB::table('cita')->insert([
             'motivo' => 'Dolor de cabeza',
             'area' => 'San Roque',
             'fechaSolicitud' => '12/05/2024',
             'fechaCita' => '19/05/2024',
             'horaCita' => '8:00 am',
-        ]);*/
+            'idPaciente'=> 1,
+            'idMedico'=> 1
+        ]);
     }
 
     /**

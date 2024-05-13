@@ -24,8 +24,12 @@ return new class extends Migration
                 $table->string("padecimiento")->nullable(false);
                 $table->string("medicamento")->nullable(false);
                 $table->unsignedBigInteger('PacienteID')->unique();
+                
 
                 $table->foreign('PacienteID')->references('idPaciente')->on('paciente');
+                
+                
+                
             });
             DB::table('expediente')->insert([
                 'tipoSangre' => 'A',
@@ -33,6 +37,7 @@ return new class extends Migration
                 'padecimiento' => 'Calentura',
                 'medicamento' => 'Bigvaporu',
                 'PacienteID' => 1,
+                
             ]);
           
         }

@@ -26,5 +26,13 @@ class Expediente extends Model
     public function paciente(){
         return $this->belongsTo(paciente::class,"PacienteID");
     }
+    public function citas()
+    {
+        return $this->hasMany(cita::class, "idPaciente");
+    }
+    public function historiales()
+    {
+        return $this->hasMany(Historial::class, "idExpediente");
+    }
 
 }

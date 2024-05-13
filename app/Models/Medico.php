@@ -22,7 +22,7 @@ class Medico extends Model
         "especialidad",
         "telefono",
         "email",
-        "idCita",
+        
     ];
 
     public function cita()

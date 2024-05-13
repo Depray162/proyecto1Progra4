@@ -14,7 +14,7 @@ class PacienteController extends Controller
      */
     public function index()
     {
-        $pacientes = Paciente::with(["expediente"])->get();
+        $pacientes = Paciente::with(["expediente","citas"])->get();
 
         if (count($pacientes) === 0) {
             $response = [
@@ -88,7 +88,7 @@ class PacienteController extends Controller
      */
     public function show($id)
     {
-        $paciente = Paciente::with("expediente")->where("idPaciente","=", $id)->first();    
+        $paciente = Paciente::with(["expediente","citas"])->where("idPaciente","=", $id)->first();    
         
         if (!$paciente) {
             return response()->json(['message' => 'Paciente no encontrado'], 404);
