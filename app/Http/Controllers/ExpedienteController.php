@@ -4,33 +4,31 @@ namespace App\Http\Controllers;
 
 use App\Models\Expediente;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use App\Http\Requests\StoreExpedienteRequest;
-use App\Http\Requests\UpdateExpedienteRequest;
+use Illuminate\Support\Facades\Validator;
 
 class ExpedienteController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index() //Get all, devuelve todos los elementos 
+    public function index()
     {
-        $expediente = Expediente::all();
-        $response = [
-            "status" => 200,
-            "message" => "Expediente obtenido correctamente",
-            "data" => $expediente
+        $expedientes = Expediente::all();
 
-        ];
+        if ($expedientes->isEmpty()) {
+            $response = [
+                "status" => 200,
+                "message" => "El sistema no cuenta con expedientes",
+            ];
+        } else {
+            $response = [
+                "status" => 200,
+                "message" => "Expedientes obtenidos correctamente",
+                "data" => $expedientes
+            ];
+        }
+
         return response()->json($response, 200);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -38,69 +36,66 @@ class ExpedienteController extends Controller
      */
     public function store(Request $request)
     {
-        $data_input = $request->input('data', null);
-    
-        if ($data_input) {
-            $data = json_decode($data_input, true);
-            $data = array_map('trim', $data);
-            $rules = [
-                'name' => 'required|alpha' //validar que los datos que se están ingresando sean string
-            ];
-            $isValid = \validator($data, $rules);
-    
-            if (!$isValid->fails()) {
-                $expediente = new Expediente();
-                $expediente->name = $data['name'];
-                $expediente->save();
-    
-                $response = array(
-                    'status' => 201,
-                    'message' => 'Expediente creado',
-                    'Expediente' => $expediente
-                );
-            } else {
-                $response = array(
-                    'status' => 406,
-                    'message' => 'Datos inválidos',
-                    'errors' => $isValid->errors()
-                );
-            }
-        } else {
-            $response = array(
-                'status' => 400,
-                'message' => 'No se encontró el objeto data'
-            );
+        $validator = Validator::make($request->all(), [
+            "idExpediente" => 'required',
+            "tipoSangre" => 'required',
+            "alergia" => 'required', // Corregido el nombre del campo
+            "padecimiento" => 'required',
+            "medicamento" => 'required',
+            "PacienteID" => 'required|exists:paciente,idPaciente' // Validar que el PacienteID existe en la tabla de pacientes
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Error en la validación de datos',
+                'errors' => $validator->errors(),
+                'status' => 400
+            ], 400);
         }
-    
-        return response()->json($response, $response['status']);
+
+        $expediente = Expediente::create([
+            "idExpediente" => $request->idExpediente,
+            "tipoSangre" => $request->tipoSangre,
+            "alergia" => $request->alergia,
+            "padecimiento" => $request->padecimiento,
+            "medicamento" => $request->medicamento,
+            "PacienteID" => $request->PacienteID
+        ]);
+
+        return response()->json([
+            'message' => 'Expediente creado correctamente',
+            'expediente' =>  $expediente,
+            'status' => 201
+        ], 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Expediente $expediente)
+    public function show($id)
     {
-        //
-    }
+        $expediente = Expediente::find($id);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Expediente $expediente)
-    {
-        //
-    }
+        if (!$expediente) {
+            return response()->json(['message' => 'Expediente no encontrado'], 404);
+        }
 
-    /**
-     * Update the specified resource in storage.
-     */
- 
+        return response()->json($expediente, 200);
+    }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Expediente $expediente)
+    public function destroy($id)
     {
-        //
+        $expediente = Expediente::find($id);
+
+        if (!$expediente) {
+            return response()->json(['message' => 'Expediente no encontrado'], 404);
+        }
+
+        $expediente->delete();
+
+        return response()->json(['message' => 'Expediente eliminado correctamente'], 200);
     }
 }
