@@ -18,7 +18,6 @@ Route::prefix('v1')->group(
 //rutas automaticas
 Route::resource('/paciente',PacienteController::class);
 Route::resource('/medico',MedicoController::class);
-
     } 
 );
    

@@ -9,11 +9,6 @@ class Medico extends Model
 {
     use HasFactory;
 
-public function citas()
-{
-    return $this->hasMany('App\Models\cita');
-}
-
     protected $table = "medico";
 
     protected $primaryKey = "numColegiado";
