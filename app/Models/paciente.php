@@ -28,7 +28,7 @@ class paciente extends Model
     ];
 
     public function expediente(){
-        return $this->hasOne(Expediente::class,"PacienteID");
+        return $this->hasOne(Expediente::class, "PacienteID", "idPaciente");
 
     }
 }

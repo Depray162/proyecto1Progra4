@@ -14,7 +14,7 @@ return new class extends Migration
     {
         
         Schema::connection("mysql")->create('expediente', function (Blueprint $table) {
-            $table->String("idExpediente")->primary();
+            $table->id();   
             $table->string("tipoSangre", 3)->nullable();
             $table->string("alegia");
             $table->string("padecimiento");
