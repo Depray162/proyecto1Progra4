@@ -10,15 +10,20 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
+  
+       /**
+     * Run the migrations.
+     */
     public function up(): void
     {
-        Schema::connection("mysql")->create('medico', function (Blueprint $table) {
-            $table->integer("numColegiado", 50)->primary();
-            $table->string("cedula", 50)->nullable();
-            $table->string("nombre", 60)->nullable();
-            $table->string("especialidad", 60)->nullable();
-            $table->string("telefono", 50);
-            $table->string("email", 120);
+        Schema::create('medico', function (Blueprint $table) {
+            $table->id('idMedico'); // Utilizamos el método id() para definir la columna autoincremental y clave primaria
+            $table->integer('numColegiado')->unique(); // Usamos unique() para hacer que esta columna sea única pero no autoincremental
+            $table->string('cedula', 50)->nullable();
+            $table->string('nombre', 60)->nullable();
+            $table->string('especialidad', 60)->nullable();
+            $table->string('telefono', 50);
+            $table->string('email', 120);
         });
 
         DB::table('medico')->insert([
@@ -38,4 +43,5 @@ return new class extends Migration
     {
         Schema::dropIfExists('medico');
     }
+
 };
