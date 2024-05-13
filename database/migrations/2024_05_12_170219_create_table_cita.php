@@ -22,12 +22,10 @@ return new class extends Migration
             $table->foreignId('idPaciente')
             ->nullable()
             ->constrained('paciente')
-            ->cascadeOnUpdate()
             ->nullOnDelete();
             $table->foreignId('idMedico')
             ->nullable()
             ->constrained('medico')
-            ->cascadeOnUpdate()
             ->nullOnDelete();
         });
 
