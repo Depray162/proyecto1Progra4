@@ -42,7 +42,7 @@ class PacienteController extends Controller
             "nombre" => 'required',
             "edad" => 'required',
             "direccion" => 'required',
-            "telefono" => 'required',
+            "telefono" => 'required|digits:12',
             "email" => 'required|email',
             "contrasena" => "required"
         ]);
@@ -88,7 +88,7 @@ class PacienteController extends Controller
      */
     public function show($id)
     {
-        $paciente = Paciente::find($id);
+        $paciente = Paciente::with("expediente")->where("idPaciente","=", $id)->first();    
         
         if (!$paciente) {
             return response()->json(['message' => 'Paciente no encontrado'], 404);
@@ -112,4 +112,6 @@ class PacienteController extends Controller
 
         return response()->json(['message' => 'Paciente eliminado correctamente'], 200);
     }
+
+  
 }
