@@ -22,6 +22,7 @@ class Medico extends Model
         "especialidad",
         "telefono",
         "email",
+        "contrasena"
         
     ];
 

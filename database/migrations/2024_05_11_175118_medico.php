@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('especialidad', 60)->nullable();
             $table->string('telefono', 50);
             $table->string('email', 120);
+            $table->string('contrasena',12)->nullable();
             
         });
 
@@ -33,7 +34,8 @@ return new class extends Migration
             'nombre' => 'Kevin Salazar Bravo',
             'especialidad' => 'Oncologia',
             'telefono' => '123456789',
-            'email' => 'kevin@example.com'
+            'email' => 'kevin@example.com',
+            'contrasena'=> 'ickkck'
         ]);
     }
 

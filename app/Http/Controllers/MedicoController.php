@@ -30,7 +30,8 @@ class MedicoController extends Controller
             'nombre' => 'required',
             'especialidad' => 'required',
             'telefono' => 'required',
-            'email' => 'required | email'
+            'email' => 'required | email',
+            'contrasena'=> 'required'
         ]);
 
         if ($validator->fails())
@@ -51,7 +52,8 @@ class MedicoController extends Controller
             'nombre' => $request->nombre,
             'especialidad' => $request->especialidad,
             'telefono' => $request->telefono,
-            'email' => $request->email
+            'email' => $request->email,
+            'contrasena'=> $request->contrasena
         ]);
 
         if(!$medico) {
@@ -114,7 +116,8 @@ class MedicoController extends Controller
             'nombre' => 'required',
             'especialidad' => 'required',
             'telefono' => 'required',
-            'email' => 'required | email'
+            'email' => 'required | email',
+            'contrasena'=> 'required'
         ]);
         if ($validator->fails())
         {
@@ -133,6 +136,7 @@ class MedicoController extends Controller
         $medico->especialidad = $request->especialidad; 
         $medico->telefono = $request->telefono;
         $medico->email = $request->email; 
+        $medico->contrasena = $request->contrasena;
 
         $medico->save();
 
