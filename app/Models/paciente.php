@@ -21,6 +21,14 @@ class paciente extends Model
         "edad",
         "direccion",
         "telefono",
-        "email" 
+        "email",
+        "contrasena" 
+        
+
     ];
+
+    public function expediente(){
+        return $this->hasOne(Expediente::class,"PacienteID");
+
+    }
 }
