@@ -30,7 +30,7 @@ class MedicoController extends Controller
             'nombre' => 'required',
             'especialidad' => 'required',
             'telefono' => 'required',
-            'email' => 'required'| 'email'
+            'email' => 'required | email'
         ]);
 
         if ($validator->fails())
@@ -70,7 +70,79 @@ class MedicoController extends Controller
 
     }
 
-
+    public function show($id)
+    {
+        $medico = Medico::find($id);
+        
+        if (!$medico) {
+            return response()->json(['message' => 'Meidco no encontrado'], 404);
+        }
+        
+        return response()->json($medico, 200);
+    }
    
+    public function destroy($id)
+    {
+        $medico = medico::find($id);
+        
+        if (!$medico) {
+            return response()->json(['message' => 'Medico no encontrado'], 404);
+        }
+        
+        $medico->delete();
+
+        return response()->json(['message' => 'Medico eliminado correctamente'], 200);
+    }
+
+    public function update(Request $request, $id)
+    {
+
+        $medico = Medico::find($id);
+
+        if(!$medico)
+        {
+            $data = [
+                'message' => 'Medico no encontrado',
+                'status' => 404
+            ];
+            return response()->json($data, 404);
+        }
+        $validator= Validator::make($request->all(), 
+        [
+            'numColegiado' => 'required',
+            'cedula' => 'required',
+            'nombre' => 'required',
+            'especialidad' => 'required',
+            'telefono' => 'required',
+            'email' => 'required | email'
+        ]);
+        if ($validator->fails())
+        {
+            $data = 
+            [
+                'message' => 'Error en la validacion de los datos',
+                'error' => $validator->errors(),
+                'status' => 400
+            ];
+            return response()->json($data, 400);
+        }
+
+        $medico->numCOlegiado = $request->numColegiado;
+        $medico->cedula = $request->cedula; 
+        $medico->nombre = $request->nombre; 
+        $medico->especialidad = $request->especialidad; 
+        $medico->telefono = $request->telefono;
+        $medico->email = $request->email; 
+
+        $medico->save();
+
+        $data = [
+            'message' => 'Datos del medico actualizados.',
+            'medico' => $medico,
+            'status'=> 200
+        ];
+        return response()->json($data, 200);
+    }
 }
+
 
