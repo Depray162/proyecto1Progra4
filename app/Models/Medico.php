@@ -21,11 +21,12 @@ class Medico extends Model
         "nombre",
         "especialidad",
         "telefono",
-        "email" 
+        "email",
+        "idCita",
     ];
 
-    public function citas()
+    public function cita()
     {
-        return $this->hasMany("cita::class", "idCita");   
+        return $this->hasMany(cita::class, "idCita");   
     }
 }

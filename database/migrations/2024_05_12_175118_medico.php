@@ -24,17 +24,17 @@ return new class extends Migration
             $table->string('especialidad', 60)->nullable();
             $table->string('telefono', 50);
             $table->string('email', 120);
-            $table->foreignId("idCita")->nullable()->constrained('cita')->nullOnDelete();
+            $table->foreignId("idCita")->nullable()->constrained('cita', 'id')->nullOnDelete();
         });
 
-        DB::table('medico')->insert([
+        /*DB::table('medico')->insert([
             'numColegiado' => '1558',
             'cedula' => '504350769',
             'nombre' => 'Kevin Salazar Bravo',
             'especialidad' => 'Oncologia',
             'telefono' => '123456789',
             'email' => 'kevin@example.com'
-        ]);
+        ]);*/
     }
 
     /**

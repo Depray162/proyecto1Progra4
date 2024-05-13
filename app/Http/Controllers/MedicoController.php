@@ -127,7 +127,7 @@ class MedicoController extends Controller
             return response()->json($data, 400);
         }
 
-        $medico->numCOlegiado = $request->numColegiado;
+        $medico->numColegiado = $request->numColegiado;
         $medico->cedula = $request->cedula; 
         $medico->nombre = $request->nombre; 
         $medico->especialidad = $request->especialidad; 
