@@ -37,4 +37,8 @@ class cita extends Model
     {
         return $this->belongsTo(medico::class, 'idMedico');
     }
+    public function historial()
+    {
+        return $this->hasOne(Historial::class, 'idCita');
+    }
 }

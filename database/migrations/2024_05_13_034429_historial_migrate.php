@@ -20,6 +20,14 @@ return new class extends Migration
             $table->float("altura", 20)->nullable();
             $table->float("temperatura", 20)->nullable();
             $table->string("diagnostico", 200)->nullable();
+            $table->integer("idCita")->unique()->nullable(false);
+            $table->unsignedBigInteger("idExpediente")->unique()->nullable(false);
+
+            $table->foreign('idCita')->references('idCita')->on('cita');
+            
+            $table->foreign('idExpediente')->references('idExpediente')->on('expediente');
+
+
         });
 
         DB::table('historial')->insert([
@@ -28,7 +36,9 @@ return new class extends Migration
             'peso' => '65.5',
             'altura' => '170.80',
             'temperatura' => '35',
-            'diagnostico' => 'no presenta ninguna circunstancia anomala'
+            'diagnostico' => 'no presenta ninguna circunstancia anomala',
+            'idCita' => 1,
+            'idExpediente' => 1
         ]);
     }
 

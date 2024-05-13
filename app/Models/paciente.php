@@ -14,7 +14,7 @@ class paciente extends Model
     protected $primaryKey = "idPaciente";
     public $timestamps = false;
     protected $fillable = [
-    
+
         "idPaciente",
         "cedula",
         "nombre",
@@ -22,13 +22,20 @@ class paciente extends Model
         "direccion",
         "telefono",
         "email",
-        "contrasena" 
-        
+        "contrasena"
+
 
     ];
 
-    public function expediente(){
+    public function expediente()
+    {
+        
         return $this->hasOne(Expediente::class, "PacienteID", "idPaciente");
 
+    }
+
+    public function citas()
+    {
+        return $this->hasMany(cita::class, "idPaciente");
     }
 }

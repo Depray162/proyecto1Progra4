@@ -21,6 +21,19 @@ class Historial extends Model
         "peso",
         "altura",
         "temperatura",
-        "diagnostico" 
+        "diagnostico", 
+        "idCita",
+        "idExpediente"
     ];
+
+    public function cita()
+    {
+        return $this->belongsTo(cita::class, "idCita");   
+    }
+    public function expediente()
+    {
+        return $this->belongsTo(Expediente::class, 'idExpediente');
+    }
+    
+    
 }

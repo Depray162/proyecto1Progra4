@@ -13,7 +13,7 @@ class ExpedienteController extends Controller
      */
     public function index()
     {
-        $expedientes = Expediente::all();
+        $expedientes = Expediente::with(["historiales"])->get();
 
         if ($expedientes->isEmpty()) {
             $response = [

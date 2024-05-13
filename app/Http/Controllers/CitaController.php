@@ -14,7 +14,7 @@ class CitaController extends Controller
      */
     public function index()
     {
-        $citas = cita::all();
+        $citas = cita::with(["paciente","medico","historial"])->get();
 
         if ($citas->isEmpty()) {
             $response = [
