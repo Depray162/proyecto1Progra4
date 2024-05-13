@@ -1,6 +1,10 @@
 <?php
 
+
+use App\Http\Controllers\HistorialController;
+
 use App\Http\Controllers\ExpedienteController;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PacienteController;
@@ -27,8 +31,9 @@ Route::resource('/expediente',ExpedienteController::class, ['except'=> ['create'
 
 
 Route::resource('/paciente',PacienteController::class);
-Route::resource('/medico',MedicoController::class);
-      Route::resource('/paciente',PacienteController::class, ['except'=> ['create', 'edit']]);
+Route::resource('/medico',MedicoController::class,['except'=> ['create', 'edit']]);
+Route::resource('/paciente',PacienteController::class, ['except'=> ['create', 'edit']]);
+Route::resource('/historial',HistorialController::class,['except'=> ['create', 'edit']]);
     } 
 
 
