@@ -113,5 +113,61 @@ class PacienteController extends Controller
         return response()->json(['message' => 'Paciente eliminado correctamente'], 200);
     }
 
-  
+    public function update(Request $request, $id)
+    {
+
+        $paciente = Paciente::find($id);
+
+        if(!$paciente)
+        {
+            $data = [
+                'message' => 'paciente no encontrado',
+                'status' => 404
+            ];
+            return response()->json($data, 404);
+        }
+        $validator= Validator::make($request->all(), 
+        [
+            
+           
+            "nombre" => 'required',
+            "edad" => 'required',
+            "direccion" => 'required',
+            "telefono" => 'required|digits:12',
+            "email" => 'required|email',
+            "contrasena" => "required"
+          
+        ]);
+        if ($validator->fails())
+        {
+            $data = 
+            [
+                'message' => 'Error en la validacion de los datos',
+                'error' => $validator->errors(),
+                'status' => 400
+            ];
+            return response()->json($data, 400);
+        }
+       
+        
+        
+        $paciente->nombre = $request->nombre; 
+        $paciente->edad = $request->edad; 
+        $paciente->direccion = $request->direccion; 
+        $paciente->telefono = $request->telefono;
+        $paciente->email = $request->email;
+        $paciente->contrasena = $request->contrasena;
+        
+
+        $paciente->save();
+
+        $data = [
+            'message' => 'Datos del paciente fueron actualizados.',
+            'medico' => $paciente,
+            'status'=> 200
+        ];
+        return response()->json($data, 200);
+    }
 }
+
+
