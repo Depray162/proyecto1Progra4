@@ -75,7 +75,7 @@ class MedicoController extends Controller
         $medico = Medico::find($id);
         
         if (!$medico) {
-            return response()->json(['message' => 'Meidco no encontrado'], 404);
+            return response()->json(['message' => 'medico no encontrado'], 404);
         }
         
         return response()->json($medico, 200);
