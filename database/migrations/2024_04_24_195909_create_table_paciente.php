@@ -13,18 +13,18 @@ return new class extends Migration
     public function up(): void
     {
         
-        Schema::connection("mysql")->create('paciente', function (Blueprint $table) {
-            $table->id();
-            $table->string("cedula", 50)->nullable()->unique();
-            $table->string("nombre", 60)->nullable();
-            $table->integer("edad")->nullable();
+        Schema::create('paciente', function (Blueprint $table) {
+            $table->id('idPaciente')->primary()->autoIncrement();
+            $table->string("cedula", 50)->nullable(false)->unique();
+            $table->string("nombre", 60)->nullable(false);
+            $table->integer("edad")->nullable(false);
             $table->string("direccion", 100);
             $table->string("telefono", 50);
-            $table->string("email", 120);
-            $table->string("contrasena");
+            $table->string("email", 120)->nullable(false);
+            $table->string("contrasena")->nullable(false);
         });
 
-        
+        // Insertar datos de ejemplo
         DB::table('paciente')->insert([
             'cedula' => '1234567890',
             'nombre' => 'Juan Perez',
@@ -34,7 +34,6 @@ return new class extends Migration
             'email' => 'juan@example.com',
             'contrasena' => 'pedro123'
         ]);
-
     }
 
     /**
