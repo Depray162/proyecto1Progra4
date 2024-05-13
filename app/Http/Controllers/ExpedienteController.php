@@ -98,4 +98,54 @@ class ExpedienteController extends Controller
 
         return response()->json(['message' => 'Expediente eliminado correctamente'], 200);
     }
+    public function update(Request $request, $id)
+    {
+
+        $expediente = Expediente::find($id);
+
+        if(!$expediente)
+        {
+            $data = [
+                'message' => 'Medico no encontrado',
+                'status' => 404
+            ];
+            return response()->json($data, 404);
+        }
+        $validator= Validator::make($request->all(), 
+        [
+            
+            "tipoSangre" => 'required',
+            "alergia" => 'required',
+            "padecimiento" => 'required',
+            "medicamento" => 'required',
+          
+        ]);
+        if ($validator->fails())
+        {
+            $data = 
+            [
+                'message' => 'Error en la validacion de los datos',
+                'error' => $validator->errors(),
+                'status' => 400
+            ];
+            return response()->json($data, 400);
+        }
+       
+        
+        $expediente->idExpediente = $request->idExpediente;
+        $expediente->tipoSangre = $request->tipoSangre; 
+        $expediente->alergia = $request->alergia; 
+        $expediente->padecimiento = $request->padecimiento; 
+        $expediente->medicamento = $request->medicamento;
+        
+
+        $expediente->save();
+
+        $data = [
+            'message' => 'Datos del medico actualizados.',
+            'medico' => $expediente,
+            'status'=> 200
+        ];
+        return response()->json($data, 200);
+    }
 }

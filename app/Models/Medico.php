@@ -11,10 +11,11 @@ class Medico extends Model
 
     protected $table = "medico";
 
-    protected $primaryKey = "numColegiado";
+    protected $primaryKey = "idMedico";
     public $timestamps = false;
     protected $fillable = [
     
+        "idMedico",
         "numColegiado",
         "cedula",
         "nombre",
