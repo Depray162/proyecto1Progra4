@@ -12,33 +12,36 @@ return new class extends Migration
      */
     public function up(): void
     {
+        /**
+         * Run the migrations.
+         */
         
-        Schema::connection("mysql")->create('expediente', function (Blueprint $table) {
-            $table->String("idExpediente")->primary();
-            $table->string("tipoSangre", 3)->nullable();
-            $table->string("alegia");
-            $table->string("padecimiento");
-            $table->string("medicamento");
-      
-        });
-
         
-        DB::table('expediente')->insert([
-            'idExpediente' => 'AB4567890',
-            'tipoSangre' => 'A',
-             'alegia' => 'Many',
-            'padecimiento' => 'Calentura',
-            'medicamento' => 'Bigvaporu',
-            
-        ]);
+            Schema::create('expediente', function (Blueprint $table) {
+                $table->id('idExpediente')->primary();
+                $table->string("tipoSangre", 3)->nullable(false);
+                $table->string("alergia")->nullable(false);
+                $table->string("padecimiento")->nullable(false);
+                $table->string("medicamento")->nullable(false);
+                $table->unsignedBigInteger('PacienteID')->unique();
 
-    }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::dropIfExists('expediente');
-    }
+                $table->foreign('PacienteID')->references('idPaciente')->on('paciente');
+            });
+            DB::table('expediente')->insert([
+                'tipoSangre' => 'A',
+                'alergia' => 'Many',
+                'padecimiento' => 'Calentura',
+                'medicamento' => 'Bigvaporu',
+                'PacienteID' => 1,
+            ]);
+          
+        }
+    
+        /**
+         * Reverse the migrations.
+         */
+        public function down(): void
+        {
+            Schema::dropIfExists('expediente');
+        }
 };

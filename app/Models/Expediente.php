@@ -9,7 +9,7 @@ class Expediente extends Model
 {
    use HasFactory;
 
-    protected $table = "Expediente";
+    protected $table = "expediente";
 
     protected $primaryKey = "idExpediente";
     public $timestamps = false;
@@ -17,7 +17,7 @@ class Expediente extends Model
     
         "idExpediente",
         "tipoSangre",
-        "alegia",
+        "alergia",
         "padecimiento",
         "medicamento",        
         "PacienteID"
