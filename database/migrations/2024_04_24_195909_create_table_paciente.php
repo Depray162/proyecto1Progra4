@@ -15,7 +15,7 @@ return new class extends Migration
         
         Schema::connection("mysql")->create('paciente', function (Blueprint $table) {
             $table->id();
-            $table->string("cedula", 50)->nullable();
+            $table->string("cedula", 50)->nullable()->unique();
             $table->string("nombre", 60)->nullable();
             $table->integer("edad")->nullable();
             $table->string("direccion", 100);

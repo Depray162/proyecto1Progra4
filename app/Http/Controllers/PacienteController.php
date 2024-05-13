@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\paciente;
+use App\Models\Paciente;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
@@ -12,47 +12,33 @@ class PacienteController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index() //Get all, devuelve todos los elementos 
+    public function index()
     {
         $pacientes = Paciente::with(["expediente"])->get();
 
-        if ($pacientes->isEmpty()) {
+        if (count($pacientes) === 0) {
             $response = [
                 "status" => 200,
                 "message" => "El sistema no cuenta con pacientes",
-
             ];
         } else {
             $response = [
                 "status" => 200,
-                "message" => "usuarios obtenidos correctamente",
+                "message" => "Usuarios obtenidos correctamente",
                 "data" => $pacientes
-
             ];
         }
-
 
         return response()->json($response, 200);
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
-
-    //Metodo post para crear un registro
     public function store(Request $request)
     {
-        $validator = validator::make($request->all(), [
-            "idPaciente" => 'required',
-            "cedula" => 'required',
+        $validator = Validator::make($request->all(), [
+            "cedula" => 'required|unique:paciente',
             "nombre" => 'required',
             "edad" => 'required',
             "direccion" => 'required',
@@ -63,58 +49,67 @@ class PacienteController extends Controller
 
         if ($validator->fails()) {
             $data = [
-                'menssage' => 'error en la validacion de datos',
-                'errors ' => $validator->errors(),
+                'message' => 'Error en la validación de datos',
+                'errors' => $validator->errors(),
                 'status' => 400
             ];
             return response()->json($data, 400);
-        }else{
-            $Paciente =  paciente::create([
-                "idPaciente" => $request -> idPaciente,
-                "cedula" => $request -> cedula,
-                "nombre" => $request -> nombre,
-                "edad" => $request -> edad,
-                "direccion" => $request -> direccion,
-                "telefono" => $request -> telefono,
-                "email" => $request -> email,
-                "contrasena" => $request -> contrasena,
-
-            ]);
         }
-if ($Paciente) {
-    }
-}
 
+        $paciente = Paciente::create([
+            "cedula" => $request->cedula,
+            "nombre" => $request->nombre,
+            "edad" => $request->edad,
+            "direccion" => $request->direccion,
+            "telefono" => $request->telefono,
+            "email" => $request->email,
+            "contrasena" => $request->contrasena,
+        ]);
+
+        if (!$paciente) {
+            $data = [
+                'message' => 'Error al guardar el paciente',
+                'status' => 500
+            ];
+            return response()->json($data, 500);
+        }
+
+        $data = [
+            'message' => 'Paciente creado correctamente',
+            'paciente' =>  $paciente,
+            'status' => 201
+        ];
+
+        return response()->json($data, 201);
+    }
 
     /**
      * Display the specified resource.
      */
-    public function show(Request $request, $id)
+    public function show($id)
     {
-        return 'Id: ' . $id;
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id)
-    {
-        //
+        $paciente = Paciente::find($id);
+        
+        if (!$paciente) {
+            return response()->json(['message' => 'Paciente no encontrado'], 404);
+        }
+        
+        return response()->json($paciente, 200);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, $id)
+    public function destroy($id)
     {
-        //
+        $paciente = Paciente::find($id);
+        
+        if (!$paciente) {
+            return response()->json(['message' => 'Paciente no encontrado'], 404);
+        }
+        
+        $paciente->delete();
+
+        return response()->json(['message' => 'Paciente eliminado correctamente'], 200);
     }
 }
