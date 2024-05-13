@@ -24,4 +24,8 @@ class Medico extends Model
         "email" 
     ];
 
+    public function citas()
+    {
+        return $this->hasMany("cita::class", "idCita");   
+    }
 }
