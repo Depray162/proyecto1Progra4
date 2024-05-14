@@ -86,8 +86,8 @@ class CitaController extends Controller
 
         $response = [
             'message' => 'Cita creada correctamente',
+            'status' => 201,
             'cita' => $cita,
-            'status' => 201
         ];
         return response()->json($response, 201);
     }
@@ -102,8 +102,14 @@ class CitaController extends Controller
         if (!$cita) {
             return response()->json(['message' => 'cita no encontrada'], 404);
         }
-        
-        return response()->json($cita, 200);
+
+        $response = [
+            'message' => 'Cita encontrada correctamente',
+            'status' => 201,
+            'cita' => $cita,
+        ];
+        return response()->json($response, 200);
+
     }
 
     /**
@@ -156,8 +162,8 @@ class CitaController extends Controller
 
         $response = [
             'message' => 'Cita actualizada correctamente',
+            'status' => 201,
             'cita' => $cita,
-            'status' => 200
         ];
         return response()->json($response, 200);
     }
