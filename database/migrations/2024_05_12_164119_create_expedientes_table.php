@@ -18,11 +18,11 @@ return new class extends Migration
         
         
             Schema::create('expediente', function (Blueprint $table) {
-                $table->id('idExpediente')->primary();
+                $table->id('idExpediente');
                 $table->string("tipoSangre", 3)->nullable(false);
-                $table->string("alergia")->nullable(false);
-                $table->string("padecimiento")->nullable(false);
-                $table->string("medicamento")->nullable(false);
+                $table->text("alergia")->nullable(false);
+                $table->text("padecimiento")->nullable(false);
+                $table->text("medicamento")->nullable(false);
                 $table->unsignedBigInteger('PacienteID')->unique();
                 
 

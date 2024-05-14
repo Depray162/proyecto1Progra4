@@ -14,7 +14,7 @@ class CitaController extends Controller
      */
     public function index()
     {
-        $citas = cita::with(["paciente","medico","historial"])->get();
+        $citas = cita::with(["paciente", "medico", "historial"])->get();
 
         if ($citas->isEmpty()) {
             $response = [
@@ -51,9 +51,10 @@ class CitaController extends Controller
             'fechaSolicitud' => 'required',
             'fechaCita' => 'required',
             'horaCita' => 'required',
-            'idPaciente' => 'exist',
-            'idMedico'=> 'exist',
+            'idPaciente' => 'exists:paciente,idPaciente',
+            'idMedico' => 'exists:medico,idMedico',
         ]);
+        
 
         if ($validator->fails()) {
             $response = [
@@ -70,6 +71,9 @@ class CitaController extends Controller
             'fechaSolicitud' => $request->fechaSolicitud,
             'fechaCita' => $request->fechaCita,
             'horaCita' => $request->horaCita,
+            'idPaciente' => $request->idPaciente,
+            'idMedico' => $request->idMedico
+
         ]);
 
         if (!$cita) {

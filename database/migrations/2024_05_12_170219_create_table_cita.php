@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::connection("mysql")->create("cita", function (Blueprint $table) {
             $table->integer("idCita")->autoIncrement()->primary();
-            $table->string("motivo", 100)->nullable();
+            $table->text("motivo")->nullable();
             $table->string("area", 60)->nullable();
             $table->string("fechaSolicitud", 60);
             $table->string("fechaCita", 60);
