@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Helpers\JwtAuth;
 
-class ApiAuthMiddleware
+class ApiAuthMiddlewarePac
 {
     /**
      * Handle an incoming request.
@@ -17,7 +17,7 @@ class ApiAuthMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         $jwt = new JwtAuth();
-        $token = $request->bearerToken();   
+        $token = $request->bearerToken();
         $logged = $jwt->verifyTokenPac($token);
 
         if ($logged) {
