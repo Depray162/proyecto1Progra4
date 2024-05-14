@@ -14,7 +14,7 @@ class CitaController extends Controller
      */
     public function index()
     {
-        $citas = cita::with(["paciente","medico","historial"])->get();
+        $citas = cita::with(["paciente", "medico", "historial"])->get();
 
         if ($citas->isEmpty()) {
             $response = [
@@ -51,8 +51,8 @@ class CitaController extends Controller
             'fechaSolicitud' => 'required',
             'fechaCita' => 'required',
             'horaCita' => 'required',
-            'idPaciente' => 'exist',
-            'idMedico'=> 'exist',
+            'idPaciente' => 'exists:paciente,idPaciente',
+            'idMedico' => 'exists:medico,idMedico',
         ]);
 
         if ($validator->fails()) {
@@ -82,8 +82,8 @@ class CitaController extends Controller
 
         $response = [
             'message' => 'Cita creada correctamente',
+            'status' => 201,
             'cita' => $cita,
-            'status' => 201
         ];
         return response()->json($response, 201);
     }
@@ -104,8 +104,8 @@ class CitaController extends Controller
         }
         $response = [
             'message' => 'Cita encontrada correctamente',
+            'status' => 201,
             'cita' => $cita,
-            'status' => 200
         ];
         return response()->json($response, 200);
     }
@@ -160,8 +160,8 @@ class CitaController extends Controller
 
         $response = [
             'message' => 'Cita actualizada correctamente',
+            'status' => 201,
             'cita' => $cita,
-            'status' => 200
         ];
         return response()->json($response, 200);
     }

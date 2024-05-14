@@ -7,6 +7,7 @@ use App\Http\Controllers\MedicoController;
 use App\Http\Controllers\CitaController;
 use App\Http\Controllers\HistorialController;
 use App\Http\Controllers\ExpedienteController;
+use App\Http\Middleware\ApiAuthMiddleware;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -15,9 +16,10 @@ Route::get('/user', function (Request $request) {
 Route::prefix('v1')->group(
     function () {
         //Rutas expecificas
+        Route::post('/paciente/login', [PacienteController::class, 'login']);
 
         //rutas automaticas
-        Route::resource('/paciente', PacienteController::class, ['except' => ['create', 'edit']]);
+        Route::resource('/paciente', PacienteController::class, ['except' => ['create', 'edit']])->middleware(ApiAuthMiddleware::class);
         Route::resource('/medico', MedicoController::class, ['Except' => ['create', 'edit']]);
         Route::resource('/cita', CitaController::class, ['Except' => ['create', 'edit']]);
         Route::resource('/historial', HistorialController::class, ['Except' => ['create', 'edit']]);
