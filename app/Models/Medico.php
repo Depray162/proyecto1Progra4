@@ -26,7 +26,7 @@ class Medico extends Model
         
     ];
 
-    public function cita()
+    public function citas()
     {
         return $this->hasMany(cita::class, "idCita");   
     }

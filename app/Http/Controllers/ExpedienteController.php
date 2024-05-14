@@ -74,12 +74,13 @@ class ExpedienteController extends Controller
      */
     public function show($id)
     {
-        $expediente = Expediente::find($id);
-
+        $expediente = Expediente::with(["historiales"])->where("idExpediente", $id)->first();
+    
+        
         if (!$expediente) {
             return response()->json(['message' => 'Expediente no encontrado'], 404);
         }
-
+        
         return response()->json($expediente, 200);
     }
 

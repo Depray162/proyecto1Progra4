@@ -6,19 +6,29 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Models\Medico;
 use Illuminate\Support\Facades\Validator;
+use App\Models\cita;
 
 class MedicoController extends Controller
 {
-    public function index() //funcion para mostrar todos los datos
+    public function index()
     {
-        $medico=Medico::all();
-        $response = [
-            "status" => 200,
-            "message" => "Medicos obtenidos correctamente",
-            "data" => $medico
-        ]; 
+        $medico = Medico::with(["citas"])->get();
+
+        if (count($medico) === 0) {
+            $response = [
+                "status" => 200,
+                "message" => "El sistema no cuenta con medicos",
+            ];
+        } else {
+            $response = [
+                "status" => 200,
+                "message" => "Usuarios obtenidos correctamente",
+                "data" => $medico
+            ];
+        }
+
         return response()->json($response, 200);
-    } 
+    }
 
     public function store(request $request)
     {
@@ -74,10 +84,10 @@ class MedicoController extends Controller
 
     public function show($id)
     {
-        $medico = Medico::find($id);
+        $medico = Medico::with(["citas"])->where("idMedico","=", $id)->first();    
         
         if (!$medico) {
-            return response()->json(['message' => 'medico no encontrado'], 404);
+            return response()->json(['message' => 'Medico no encontrado'], 404);
         }
         
         return response()->json($medico, 200);
