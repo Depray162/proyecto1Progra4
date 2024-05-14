@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use App\Models\Medico;
 use Illuminate\Support\Facades\Validator;
-use App\Models\cita;
+use App\Helpers\JwtAuth;
 
 class MedicoController extends Controller
 {
@@ -33,40 +32,42 @@ class MedicoController extends Controller
     public function store(request $request)
     {
 
-       $validator= Validator::make($request->all(), 
-        [
-            'numColegiado' => 'required',
-            'cedula' => 'required',
-            'nombre' => 'required',
-            'especialidad' => 'required',
-            'telefono' => 'required',
-            'email' => 'required | email',
-            'contrasena'=> 'required'
-        ]);
-
-        if ($validator->fails())
-        {
-            $data = 
+        $validator = Validator::make(
+            $request->all(),
             [
-                'message' => 'Error en la validacion de los datos',
-                'error' => $validator->errors(),
-                'status' => 400
-            ];
+                'numColegiado' => 'required',
+                'cedula' => 'required',
+                'nombre' => 'required',
+                'especialidad' => 'required',
+                'telefono' => 'required',
+                'email' => 'required | email',
+                'contrasena' => 'required'
+            ]
+        );
+
+        if ($validator->fails()) {
+            $data =
+                [
+                    'message' => 'Error en la validacion de los datos',
+                    'error' => $validator->errors(),
+                    'status' => 400
+                ];
             return response()->json($data, 400);
         }
 
         $medico = Medico::create(
             [
-            'numColegiado' => $request->numColegiado,
-            'cedula' => $request->cedula,
-            'nombre' => $request->nombre,
-            'especialidad' => $request->especialidad,
-            'telefono' => $request->telefono,
-            'email' => $request->email,
-            'contrasena'=> $request->contrasena
-        ]);
+                'numColegiado' => $request->numColegiado,
+                'cedula' => $request->cedula,
+                'nombre' => $request->nombre,
+                'especialidad' => $request->especialidad,
+                'telefono' => $request->telefono,
+                'email' => $request->email,
+                'contrasena' => $request->contrasena
+            ]
+        );
 
-        if(!$medico) {
+        if (!$medico) {
             $data = [
                 'message' => 'Error al crear el registro de Medico',
                 'status' => 500
@@ -79,28 +80,27 @@ class MedicoController extends Controller
             ];
             return response()->json($data, 201);
         }
-
     }
 
     public function show($id)
     {
-        $medico = Medico::with(["citas"])->where("idMedico","=", $id)->first();    
-        
+        $medico = Medico::with(["citas"])->where("idMedico", "=", $id)->first();
+
         if (!$medico) {
             return response()->json(['message' => 'Medico no encontrado'], 404);
         }
-        
+
         return response()->json($medico, 200);
     }
-   
+
     public function destroy($id)
     {
         $medico = medico::find($id);
-        
+
         if (!$medico) {
             return response()->json(['message' => 'Medico no encontrado'], 404);
         }
-        
+
         $medico->delete();
 
         return response()->json(['message' => 'Medico eliminado correctamente'], 200);
@@ -111,41 +111,41 @@ class MedicoController extends Controller
 
         $medico = Medico::find($id);
 
-        if(!$medico)
-        {
+        if (!$medico) {
             $data = [
                 'message' => 'Medico no encontrado',
                 'status' => 404
             ];
             return response()->json($data, 404);
         }
-        $validator= Validator::make($request->all(), 
-        [
-            'numColegiado' => 'required',
-            'cedula' => 'required',
-            'nombre' => 'required',
-            'especialidad' => 'required',
-            'telefono' => 'required',
-            'email' => 'required | email',
-            'contrasena'=> 'required'
-        ]);
-        if ($validator->fails())
-        {
-            $data = 
+        $validator = Validator::make(
+            $request->all(),
             [
-                'message' => 'Error en la validacion de los datos',
-                'error' => $validator->errors(),
-                'status' => 400
-            ];
+                'numColegiado' => 'required',
+                'cedula' => 'required',
+                'nombre' => 'required',
+                'especialidad' => 'required',
+                'telefono' => 'required',
+                'email' => 'required | email',
+                'contrasena' => 'required'
+            ]
+        );
+        if ($validator->fails()) {
+            $data =
+                [
+                    'message' => 'Error en la validacion de los datos',
+                    'error' => $validator->errors(),
+                    'status' => 400
+                ];
             return response()->json($data, 400);
         }
 
         $medico->numColegiado = $request->numColegiado;
-        $medico->cedula = $request->cedula; 
-        $medico->nombre = $request->nombre; 
-        $medico->especialidad = $request->especialidad; 
+        $medico->cedula = $request->cedula;
+        $medico->nombre = $request->nombre;
+        $medico->especialidad = $request->especialidad;
         $medico->telefono = $request->telefono;
-        $medico->email = $request->email; 
+        $medico->email = $request->email;
         $medico->contrasena = $request->contrasena;
 
         $medico->save();
@@ -153,10 +153,27 @@ class MedicoController extends Controller
         $data = [
             'message' => 'Datos del medico actualizados.',
             'medico' => $medico,
-            'status'=> 200
+            'status' => 200
         ];
         return response()->json($data, 200);
     }
+
+    public function loginMed(Request $request)
+    {
+        $rules = ['cedula' => 'required', 'contrasena' => 'required'];
+        $isValid = validator($request->all(), $rules);
+
+        if (!$isValid->fails()) {
+            $jwt =  new JwtAuth();
+            $response = $jwt->getTokenPac($request->cedula, $request->contrasena);
+            return response()->json($response);
+        } else {
+            $response = array(
+                'message' => 'Error al validar los datos',
+                'errors' => $isValid->errors(),
+                'status' => 406,
+            );
+            return response()->json($response, 406);
+        }
+    }
 }
-
-
