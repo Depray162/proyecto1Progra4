@@ -15,16 +15,16 @@ return new class extends Migration
         Schema::connection("mysql")->create('historial', function (Blueprint $table) {
             $table->integer("idHistorial")->autoIncrement()->primary();
             $table->string("hora", 5)->nullable();
-            $table->string("presionArterial", 20)->nullable();
-            $table->float("peso", 20)->nullable();
-            $table->float("altura", 20)->nullable();
-            $table->float("temperatura", 20)->nullable();
-            $table->string("diagnostico", 200)->nullable();
+            $table->string("presionArterial", 10)->nullable();
+            $table->float("peso")->nullable();
+            $table->float("altura")->nullable();
+            $table->float("temperatura")->nullable();
+            $table->text("diagnostico")->nullable();
             $table->integer("idCita")->unique()->nullable(false);
-            $table->unsignedBigInteger("idExpediente")->unique()->nullable(false);
+            $table->unsignedBigInteger("idExpediente")->nullable(false);
 
             $table->foreign('idCita')->references('idCita')->on('cita');
-            
+
             $table->foreign('idExpediente')->references('idExpediente')->on('expediente');
 
 
@@ -33,9 +33,9 @@ return new class extends Migration
         DB::table('historial')->insert([
             'hora' => '15:30',
             'presionArterial' => '120/80',
-            'peso' => '65.5',
-            'altura' => '170.80',
-            'temperatura' => '35',
+            'peso' => 65.5,
+            'altura' => 170.80,
+            'temperatura' => 35,
             'diagnostico' => 'no presenta ninguna circunstancia anomala',
             'idCita' => 1,
             'idExpediente' => 1

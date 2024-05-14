@@ -14,14 +14,14 @@ return new class extends Migration
     {
         
         Schema::create('paciente', function (Blueprint $table) {
-            $table->id('idPaciente')->primary()->autoIncrement();
-            $table->string("cedula", 50)->nullable(false)->unique();
-            $table->string("nombre", 60)->nullable(false);
+            $table->id('idPaciente');
+            $table->string("cedula",12)->nullable(false)->unique();
+            $table->string("nombre",60)->nullable(false);
             $table->integer("edad")->nullable(false);
-            $table->string("direccion", 100);
-            $table->string("telefono", 50);
-            $table->string("email", 120)->nullable(false);
-            $table->string("contrasena")->nullable(false);
+            $table->text("direccion");
+            $table->string("telefono", 12);
+            $table->text("email")->nullable(false);
+            $table->string("contrasena", 12)->nullable(false);
         });
 
         // Insertar datos de ejemplo
