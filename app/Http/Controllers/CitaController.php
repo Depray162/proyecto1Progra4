@@ -97,21 +97,13 @@ class CitaController extends Controller
      */
     public function show($id)
     {
-        $cita = cita::find($id);
-
+        $cita = Cita::with(["paciente", "medico", "historial"])->where("idMedico","=", $id)->first();    
+        
         if (!$cita) {
-            $response = [
-                'message' => 'Cita no encontrada',
-                'status' => 404
-            ];
-            return response()->json($response, 404);
+            return response()->json(['message' => 'cita no encontrada'], 404);
         }
-        $response = [
-            'message' => 'Cita encontrada correctamente',
-            'cita' => $cita,
-            'status' => 200
-        ];
-        return response()->json($response, 200);
+        
+        return response()->json($cita, 200);
     }
 
     /**
