@@ -165,7 +165,7 @@ class MedicoController extends Controller
 
         if (!$isValid->fails()) {
             $jwt =  new JwtAuth();
-            $response = $jwt->getTokenPac($request->cedula, $request->contrasena);
+            $response = $jwt->getTokenMed($request->cedula, $request->contrasena);
             return response()->json($response);
         } else {
             $response = array(
