@@ -54,6 +54,7 @@ class CitaController extends Controller
             'idPaciente' => 'exists:paciente,idPaciente',
             'idMedico' => 'exists:medico,idMedico',
         ]);
+        
 
         if ($validator->fails()) {
             $response = [
@@ -70,6 +71,9 @@ class CitaController extends Controller
             'fechaSolicitud' => $request->fechaSolicitud,
             'fechaCita' => $request->fechaCita,
             'horaCita' => $request->horaCita,
+            'idPaciente' => $request->idPaciente,
+            'idMedico' => $request->idMedico
+
         ]);
 
         if (!$cita) {
@@ -93,21 +97,19 @@ class CitaController extends Controller
      */
     public function show($id)
     {
-        $cita = cita::find($id);
-
+        $cita = Cita::with(["paciente", "medico", "historial"])->where("idMedico","=", $id)->first();    
+        
         if (!$cita) {
-            $response = [
-                'message' => 'Cita no encontrada',
-                'status' => 404
-            ];
-            return response()->json($response, 404);
+            return response()->json(['message' => 'cita no encontrada'], 404);
         }
+
         $response = [
             'message' => 'Cita encontrada correctamente',
             'status' => 201,
             'cita' => $cita,
         ];
         return response()->json($response, 200);
+
     }
 
     /**

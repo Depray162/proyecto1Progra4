@@ -29,7 +29,9 @@ class HistorialController extends Controller
             'peso' => 'required',
             'altura' => 'required',
             'temperatura' => 'required',
-            'diagnostico' => 'required'
+            'diagnostico' => 'required',
+            'idCita' => 'required',
+            'idExpediente' => 'required'
         ]);
 
         if ($validator->fails())
@@ -51,7 +53,9 @@ class HistorialController extends Controller
             'peso' => $request->peso,
             'altura' => $request->altura,
             'temperatura' => $request->temperatura,
-            'diagnostico' => $request->diagnostico
+            'diagnostico' => $request->diagnostico,
+            'idCita' => $request->idCita,
+            'idExpediente' => $request->idExpediente
         ]);
 
         if(!$historial) {

@@ -19,11 +19,14 @@ return new class extends Migration
         Schema::create('medico', function (Blueprint $table) {
             $table->id('idMedico'); // Utilizamos el método id() para definir la columna autoincremental y clave primaria
             $table->integer('numColegiado')->unique(); // Usamos unique() para hacer que esta columna sea única pero no autoincremental
-            $table->string('cedula', 50)->nullable();
-            $table->string('nombre', 60)->nullable();
+            $table->string('cedula', 12)->nullable();
+            $table->text('nombre')->nullable();
             $table->string('especialidad', 60)->nullable();
-            $table->string('telefono', 50);
-            $table->string('email', 120);
+
+            $table->string('telefono', 12);
+            $table->text('email');
+           $table->string('contrasena',12)->nullable();
+          
             
         });
 
@@ -33,7 +36,8 @@ return new class extends Migration
             'nombre' => 'Kevin Salazar Bravo',
             'especialidad' => 'Oncologia',
             'telefono' => '123456789',
-            'email' => 'kevin@example.com'
+            'email' => 'kevin@example.com',
+            'contrasena'=> 'ickkck'
         ]);
     }
 
