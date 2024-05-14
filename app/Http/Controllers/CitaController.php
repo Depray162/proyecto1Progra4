@@ -6,6 +6,9 @@ use App\Models\cita;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
+
+
+
 class CitaController extends Controller
 {
 
@@ -190,4 +193,6 @@ class CitaController extends Controller
         ];
         return response()->json($response, 200);
     }
+
+    
 }
