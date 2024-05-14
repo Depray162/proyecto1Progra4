@@ -24,7 +24,7 @@ Route::prefix('v1')->group(
         Route::resource('/paciente', PacienteController::class, ['except' => ['create', 'edit', 'login']])->middleware(ApiAuthMiddlewarePac::class);
         Route::resource('/medico', MedicoController::class, ['Except' => ['create', 'edit', 'loginMed']])->middleware(ApiAuthMiddlewareMed::class);
         Route::resource('/cita', CitaController::class, ['Except' => ['create', 'edit']]);
-        Route::get('/citas', [CitaController::class, 'verCitas']);
+        Route::get('/medico/verCitas', [MedicoController::class, 'verCitas']);
         Route::resource('/historial', HistorialController::class, ['Except' => ['create', 'edit']]);
         route::resource('/expediente', ExpedienteController::class, ['Except' => ['create', 'edit']]);
     }
