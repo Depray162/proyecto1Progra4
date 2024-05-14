@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Expediente;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Helpers\JwtAuth;
 
 class ExpedienteController extends Controller
 {
@@ -84,6 +85,9 @@ class ExpedienteController extends Controller
         return response()->json($expediente, 200);
     }
 
+
+    
+    
     /**
      * Remove the specified resource from storage.
      */
