@@ -172,15 +172,13 @@ class PacienteController extends Controller
 
     public function login(Request $request)
     {
-        $data_input = $request->input('data', null);
-        $data = json_decode($data_input, true);
-        $data = array_map('trim', $data);
+       
         $rules = ['cedula' => 'required', 'contrasena' => 'required'];
-        $isValid = validator($data, $rules);
+        $isValid = validator($request->all(), $rules);
 
         if (!$isValid->fails()) {
             $jwt =  new JwtAuth();
-            $response = $jwt->getTokenPac($data['cedula'], $data['contrasena']);
+            $response = $jwt->getTokenPac( $request->cedula,$request->contrasena);
             return response()->json($response);
         } else {
             $response = array(

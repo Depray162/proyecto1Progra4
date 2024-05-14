@@ -14,7 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         //
-        $middleware->append(ApiAuthMiddleware::class);
+  
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
