@@ -19,7 +19,7 @@ Route::prefix('v1')->group(
         Route::post('/paciente/login', [PacienteController::class, 'login']);
 
         //rutas automaticas
-        Route::resource('/paciente', PacienteController::class, ['except' => ['create', 'edit']])->middleware(ApiAuthMiddleware::class);
+        Route::resource('/paciente', PacienteController::class, ['except' => ['create', 'edit','login']])->middleware(ApiAuthMiddleware::class);
         Route::resource('/medico', MedicoController::class, ['Except' => ['create', 'edit']]);
         Route::resource('/cita', CitaController::class, ['Except' => ['create', 'edit']]);
         Route::resource('/historial', HistorialController::class, ['Except' => ['create', 'edit']]);

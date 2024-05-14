@@ -22,7 +22,7 @@ class JwtAuth
 
         if (is_object($paciente)) {
             $token = array(
-                'iss' => $paciente->id,
+                'iss' => $paciente->idPaciente,
                 'cedula' => $paciente->cedula,
                 'nombre' => $paciente->nombre,
                 'exp' => time() + (1200000) //Equivale a 20 minutos
