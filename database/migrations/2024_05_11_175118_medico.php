@@ -22,8 +22,11 @@ return new class extends Migration
             $table->string('cedula', 12)->nullable();
             $table->text('nombre')->nullable();
             $table->string('especialidad', 60)->nullable();
+
             $table->string('telefono', 12);
             $table->text('email');
+           $table->string('contrasena',12)->nullable();
+          
             
         });
 
@@ -33,7 +36,8 @@ return new class extends Migration
             'nombre' => 'Kevin Salazar Bravo',
             'especialidad' => 'Oncologia',
             'telefono' => '123456789',
-            'email' => 'kevin@example.com'
+            'email' => 'kevin@example.com',
+            'contrasena'=> 'ickkck'
         ]);
     }
 
