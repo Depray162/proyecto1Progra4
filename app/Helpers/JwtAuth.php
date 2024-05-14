@@ -76,7 +76,6 @@ class JwtAuth
             $response = JWT::encode($token, $this->key, 'HS256');
         } else {
             $response = array(
-                'cedula' => $cedula,
                 'message' => 'Los datos de autentificación del medico son incorrectos',
                 'status' => 401,
             );
