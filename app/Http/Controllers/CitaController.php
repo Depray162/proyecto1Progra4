@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\cita;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use \Firebase\JWT\JWT;
+
+
 
 class CitaController extends Controller
 {
@@ -189,5 +192,40 @@ class CitaController extends Controller
             'status' => 200
         ];
         return response()->json($response, 200);
+    }
+
+    public function verCitas(Request $request)
+    {
+        // Obtener el token JWT del encabezado de la solicitud
+        $token = $request->bearerToken();
+
+        // Verificar si se proporcionó un token
+        if (!$token) {
+            return response()->json(['error' => 'Token no proporcionado'], 401);
+        }
+
+        try {
+            $options = new \stdClass();
+            $options->algorithms = ['HS256'];
+            
+            $decoded = JWT::decode($token, env('JWT_SECRET'), $options);
+
+            // Verificar si el payload contiene la cédula del médico
+            if (!isset($decoded->cedula_medico)) {
+                return response()->json(['error' => 'No se encontró la cédula del médico en el token'], 401);
+            }
+
+            // Obtener la cédula del médico del payload
+            $cedulaMedico = $decoded->cedula_medico;
+
+            // Ahora puedes usar $cedulaMedico en tu consulta para obtener las citas del médico
+            // Supongamos que tienes un modelo de Cita y quieres obtener todas las citas para este médico
+            $citas = Cita::where('cedula_medico', $cedulaMedico)->get();
+
+            // Devolver las citas como respuesta
+            return response()->json($citas);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Token inválido'], 401);
+        }
     }
 }
