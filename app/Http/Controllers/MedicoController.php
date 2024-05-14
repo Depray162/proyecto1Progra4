@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Medico;
 use Illuminate\Support\Facades\Validator;
 use App\Helpers\JwtAuth;
-use \Firebase\JWT\JWT;
+use App\Models\cita;
 
 class MedicoController extends Controller
 {
@@ -181,36 +181,15 @@ class MedicoController extends Controller
 
     public function verCitas(Request $request)
     {
-        // Obtener el token JWT del encabezado de la solicitud
-        $token = $request->bearerToken();
-
-        // Verificar si se proporcionó un token
-        if (!$token) {
-            return response()->json(['error' => 'Token no proporcionado'], 401);
+        $jwt = new JwtAuth();
+        $logged = $jwt->verifyTokenMed( $request->bearerToken(),true );  
+       
+        $cita = Cita::where("idMedico", $logged->iss )->first();
+    
+        if (!$cita) {
+            return response()->json(['message' => 'No se han encontrado citas relacionadas'], 404);
         }
-
-        try {
-            $options = new \stdClass();
-            $options->algorithms = ['HS256'];
-            
-            $decoded = JWT::decode($token, env('JWT_SECRET'), $options);
-
-            // Verificar si el payload contiene la cédula del médico
-            if (!isset($decoded->cedulaMedico)) {
-                return response()->json(['error' => 'No se encontró la cédula del médico en el token'], 401);
-            }
-
-            // Obtener la cédula del médico del payload
-            $cedulaMedico = $decoded->cedulaMedico;
-
-            // Ahora puedes usar $cedulaMedico en tu consulta para obtener las citas del médico
-            // Supongamos que tienes un modelo de Cita y quieres obtener todas las citas para este médico
-            $cita = Medico::where('cedulaMedico', $cedulaMedico)->get();
-
-            // Devolver las citas como respuesta
-            return response()->json($cita);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Token inválido'], 401);
-        }
+    
+        return response()->json($cita, 200);
     }
 }
