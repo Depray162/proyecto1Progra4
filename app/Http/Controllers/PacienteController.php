@@ -181,7 +181,7 @@ class PacienteController extends Controller
         return response()->json($data, 200);
     }
 
-    public function login(Request $request)
+    public function loginPac(Request $request)
     {
         $rules = ['cedula' => 'required', 'contrasena' => 'required'];
         $isValid = validator($request->all(), $rules);

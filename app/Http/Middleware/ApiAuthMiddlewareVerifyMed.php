@@ -19,13 +19,13 @@ class ApiAuthMiddlewareVerifyMed
         $jwt = new JwtAuth();
         $token = $request->bearerToken();
         $logged = $jwt->verifyTokenMed($token, true);
-        
+
         if (!is_bool($logged) && $logged->iss == $request->route('id')) {
             return $next($request);
         } else {
             $response = [
                 "status" => 400,
-                "message" => "No tiene autorizacion",
+                "message" => "No tiene autorizacion med",
             ];
             return response()->json($response, 400);
         }
