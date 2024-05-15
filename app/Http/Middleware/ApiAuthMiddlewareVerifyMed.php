@@ -2,12 +2,12 @@
 
 namespace App\Http\Middleware;
 
-use App\Helpers\JwtAuth;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Helpers\JwtAuth;
 
-class ApiAuthMiddlewareVerifyPac
+class ApiAuthMiddlewareVerifyMed
 {
     /**
      * Handle an incoming request.
@@ -19,13 +19,7 @@ class ApiAuthMiddlewareVerifyPac
         $jwt = new JwtAuth();
         $token = $request->bearerToken();
         $logged = $jwt->verifyTokenMed($token, true);
-
-        if (!is_bool($logged) && $logged->tipo == 'medico') {
-            return $next($request);
-        }
-
-        $logged = $jwt->verifyTokenPac($token, true);
-
+        
         if (!is_bool($logged) && $logged->iss == $request->route('id')) {
             return $next($request);
         } else {

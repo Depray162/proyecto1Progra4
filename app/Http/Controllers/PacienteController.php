@@ -64,7 +64,7 @@ class PacienteController extends Controller
             "direccion" => $request->direccion,
             "telefono" => $request->telefono,
             "email" => $request->email,
-            "contrasena" => hash('sha256', $request->contrasena),
+            "contrasena" => hash('sha256', $request->contrasena)
         ]);
 
         if (!$paciente) {
@@ -164,15 +164,12 @@ class PacienteController extends Controller
             return response()->json($data, 400);
         }
 
-
-
         $paciente->nombre = $request->nombre;
         $paciente->edad = $request->edad;
         $paciente->direccion = $request->direccion;
         $paciente->telefono = $request->telefono;
         $paciente->email = $request->email;
-        $paciente->contrasena = $request->contrasena;
-
+        $paciente->contrasena = hash('sha256', $request->contrasena);
 
         $paciente->save();
 

@@ -64,7 +64,7 @@ class MedicoController extends Controller
                 'especialidad' => $request->especialidad,
                 'telefono' => $request->telefono,
                 'email' => $request->email,
-                'contrasena' => $request->contrasena
+                'contrasena' => hash('sha256', $request->contrasena)
             ]
         );
 
@@ -147,7 +147,7 @@ class MedicoController extends Controller
         $medico->especialidad = $request->especialidad;
         $medico->telefono = $request->telefono;
         $medico->email = $request->email;
-        $medico->contrasena = $request->contrasena;
+        $medico->contrasena = hash('sha256', $request->contrasena);
 
         $medico->save();
 
@@ -178,6 +178,57 @@ class MedicoController extends Controller
         }
     }
 
+    public function registerMed(request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'numColegiado' => 'required',
+                'cedula' => 'required',
+                'nombre' => 'required',
+                'especialidad' => 'required',
+                'telefono' => 'required',
+                'email' => 'required | email',
+                'contrasena' => 'required'
+            ]
+        );
+
+        if ($validator->fails()) {
+            $data =
+                [
+                    'message' => 'Error en la validacion de los datos',
+                    'error' => $validator->errors(),
+                    'status' => 400
+                ];
+            return response()->json($data, 400);
+        }
+
+        $medico = Medico::create(
+            [
+                'numColegiado' => $request->numColegiado,
+                'cedula' => $request->cedula,
+                'nombre' => $request->nombre,
+                'especialidad' => $request->especialidad,
+                'telefono' => $request->telefono,
+                'email' => $request->email,
+                'contrasena' => hash('sha256', $request->contrasena)
+            ]
+        );
+
+        if (!$medico) {
+            $data = [
+                'message' => 'Error al crear el registro de Medico',
+                'status' => 500
+            ];
+            return response()->json($data, 500);
+        } else {
+            $data = [
+                'medico' => $medico,
+                'status' => 201
+            ];
+            return response()->json($data, 201);
+        }
+    }
 
     public function verCitas(Request $request)
     {
