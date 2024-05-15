@@ -32,7 +32,6 @@ class MedicoController extends Controller
 
     public function store(request $request)
     {
-
         $validator = Validator::make(
             $request->all(),
             [
@@ -217,7 +216,7 @@ class MedicoController extends Controller
 
         if (!$medico) {
             $data = [
-                'message' => 'Error al crear el registro de Medico',
+                'message' => 'Error al crear el registro del medico',
                 'status' => 500
             ];
             return response()->json($data, 500);
@@ -228,19 +227,5 @@ class MedicoController extends Controller
             ];
             return response()->json($data, 201);
         }
-    }
-
-    public function verCitas(Request $request)
-    {
-        $jwt = new JwtAuth();
-        $logged = $jwt->verifyTokenMed( $request->bearerToken(),true );  
-       
-        $cita = Cita::where("idMedico", $logged->iss )->first();
-    
-        if (!$cita) {
-            return response()->json(['message' => 'No se han encontrado citas relacionadas'], 404);
-        }
-    
-        return response()->json($cita, 200);
     }
 }

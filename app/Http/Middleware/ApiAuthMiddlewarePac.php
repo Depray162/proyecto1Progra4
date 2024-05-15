@@ -24,7 +24,7 @@ class ApiAuthMiddlewarePac
             return $next($request);
         } else {
             $response = array(
-                'message' => 'No tiene la autorización para acceder pac',
+                'message' => 'El paciente no tiene la autorización para acceder',
                 'status' => 401,
             );
             return response()->json($response, 401);
