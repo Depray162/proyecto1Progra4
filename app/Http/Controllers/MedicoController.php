@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Medico;
 use Illuminate\Support\Facades\Validator;
 use App\Helpers\JwtAuth;
+use App\Models\cita;
 
 class MedicoController extends Controller
 {
@@ -165,7 +166,7 @@ class MedicoController extends Controller
 
         if (!$isValid->fails()) {
             $jwt =  new JwtAuth();
-            $response = $jwt->getTokenPac($request->cedula, $request->contrasena);
+            $response = $jwt->getTokenMed($request->cedula, $request->contrasena);
             return response()->json($response);
         } else {
             $response = array(
@@ -175,5 +176,20 @@ class MedicoController extends Controller
             );
             return response()->json($response, 406);
         }
+    }
+
+
+    public function verCitas(Request $request)
+    {
+        $jwt = new JwtAuth();
+        $logged = $jwt->verifyTokenMed( $request->bearerToken(),true );  
+       
+        $cita = Cita::where("idMedico", $logged->iss )->first();
+    
+        if (!$cita) {
+            return response()->json(['message' => 'No se han encontrado citas relacionadas'], 404);
+        }
+    
+        return response()->json($cita, 200);
     }
 }

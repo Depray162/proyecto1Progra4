@@ -27,8 +27,8 @@ class JwtAuth
                 'iss' => $paciente->idPaciente,
                 'cedula' => $paciente->cedula,
                 'nombre' => $paciente->nombre,
-                'tipo' => 'paciente',
-                'exp' => time() + (1200000) //Equivale a 20 minutos
+              'tipo' => 'paciente',
+                'exp' => time() + (20 * 60)//Equivale a 20 minutos
             );
             $response = JWT::encode($token, $this->key, 'HS256');
         } else {
@@ -66,18 +66,19 @@ class JwtAuth
     {
         $medico = Medico::where(['cedula' => $cedula, 'contrasena' => hash('sha256', $contrasena)])->first();
 
+       
         if (is_object($medico)) {
             $token = array(
                 'iss' => $medico->idMedico,
                 'cedula' => $medico->cedula,
                 'nombre' => $medico->nombre,
-                'tipo' => 'medico',
-                'exp' => time() + (1200000) //Equivale a 20 minutos
+              'tipo' => 'medico',
+                'exp' => time() + (20 * 60)//Equivale a 20 minutos
             );
             $response = JWT::encode($token, $this->key, 'HS256');
         } else {
             $response = array(
-                'message' => 'Datos de autentificación incorrectos',
+                'message' => 'Los datos de autentificación del medico son incorrectos',
                 'status' => 401,
             );
         }

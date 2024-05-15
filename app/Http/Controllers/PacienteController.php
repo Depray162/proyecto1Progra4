@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Paciente;
 use App\Helpers\JwtAuth;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Validator;
 
+use Illuminate\Support\Facades\Validator;
+use App\Models\Expediente;
 class PacienteController extends Controller
 {
     /**
@@ -92,10 +92,24 @@ class PacienteController extends Controller
         $paciente = Paciente::with(["expediente", "citas"])->where("idPaciente", "=", $id)->first();
 
         if (!$paciente) {
-            return response()->json(['message' => 'Paciente no encontrado'], 404);
+            return response()->json(['message' => 'Paciente no encontrado b'], 404);
         }
 
         return response()->json($paciente, 200);
+    }
+    public function VerExpedienteP(Request $request)    
+    {
+        
+        $jwt = new JwtAuth();
+        $logged = $jwt->verifyTokenPac( $request->bearerToken(),true );  
+       
+        $expediente = Expediente::where("PacienteID", $logged->iss )->first();
+    
+        if (!$expediente) {
+            return response()->json(['message' => 'Expediente no encontrado a'], 404);
+        }
+    
+        return response()->json($expediente, 200);
     }
 
     /**
