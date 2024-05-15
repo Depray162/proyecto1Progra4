@@ -28,7 +28,7 @@ return new class extends Migration
             
         });
 
-        DB::table('cita')->insert([
+        /*DB::table('cita')->insert([
             'motivo' => 'Dolor de cabeza',
             'area' => 'San Roque',
             'fechaSolicitud' => '12/05/2024',
@@ -36,7 +36,7 @@ return new class extends Migration
             'horaCita' => '8:00 am',
             'idPaciente'=> 1,
             'idMedico'=> 1
-        ]);
+        ]);*/
     }
 
     /**

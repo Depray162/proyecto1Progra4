@@ -30,7 +30,7 @@ return new class extends Migration
 
         });
 
-        DB::table('historial')->insert([
+        /*DB::table('historial')->insert([
             'hora' => '15:30',
             'presionArterial' => '120/80',
             'peso' => 65.5,
@@ -39,7 +39,7 @@ return new class extends Migration
             'diagnostico' => 'no presenta ninguna circunstancia anomala',
             'idCita' => 1,
             'idExpediente' => 1
-        ]);
+        ]);*/
     }
 
     /**
