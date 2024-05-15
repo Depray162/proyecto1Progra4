@@ -22,11 +22,7 @@ Route::prefix('v1')->group(
         Route::post('/paciente/login', [PacienteController::class, 'login'])->withoutMiddleware([ApiAuthMiddlewarePac::class, ApiAuthMiddlewareVerifyPac::class]);
         Route::get('/paciente/{id}', [PacienteController::class,'show'])->middleware([ApiAuthMiddlewarePac::class, ApiAuthMiddlewareVerifyPac::class]);
         Route::put('/paciente/{id}', [PacienteController::class,'update'])->middleware([ApiAuthMiddlewarePac::class, ApiAuthMiddlewareVerifyPac::class]);
-        Route::get('/paciente/cita/{id}', [CitaController::class, 'indexPacCita'])->middleware([ApiAuthMiddlewarePac::class, ApiAuthMiddlewareVerifyPac::class]);
-        Route::get('/paciente/cita/{id}', [CitaController::class, 'storePacCita'])->middleware([ApiAuthMiddlewarePac::class, ApiAuthMiddlewareVerifyPac::class]);
-        Route::get('/paciente/cita/{id}', [CitaController::class, 'showPacCita'])->middleware([ApiAuthMiddlewarePac::class, ApiAuthMiddlewareVerifyPac::class]);
-        Route::get('/paciente/cita/{id}', [CitaController::class, 'updatePacCita'])->middleware([ApiAuthMiddlewarePac::class, ApiAuthMiddlewareVerifyPac::class]);
-        Route::get('/paciente/cita/{id}', [CitaController::class, 'deletePacCita'])->middleware([ApiAuthMiddlewarePac::class, ApiAuthMiddlewareVerifyPac::class]);
+       
 
         Route::post('/medico/loginMed', [MedicoController::class, 'loginMed']);
 
@@ -40,7 +36,7 @@ Route::prefix('v1')->group(
         Route::resource('/paciente', PacienteController::class, ['except' => ['create', 'edit', 'show', 'update', 'login', 'registerPac']])->middleware([ApiAuthMiddlewarePac::class, ApiAuthMiddlewareVerifyPac::class]);
         Route::resource('/medico', MedicoController::class, ['Except' => ['create', 'edit', 'loginMed']])->middleware(ApiAuthMiddlewareMed::class);
 
-        Route::resource('/cita', CitaController::class, ['Except' => ['create', 'edit']]);
+        Route::resource('/cita', CitaController::class, ['Except' => ['create', 'edit']])->withoutMiddleware([ApiAuthMiddlewarePac::class, ApiAuthMiddlewareVerifyPac::class]);
         Route::resource('/historial', HistorialController::class, ['Except' => ['create', 'edit']]);
         route::resource('/expediente', ExpedienteController::class, ['Except' => ['create', 'edit']]);
 
