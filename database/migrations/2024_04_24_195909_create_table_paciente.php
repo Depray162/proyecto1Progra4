@@ -21,11 +21,11 @@ return new class extends Migration
             $table->text("direccion");
             $table->string("telefono", 12);
             $table->text("email")->nullable(false);
-            $table->string("contrasena", 12)->nullable(false);
+            $table->string("contrasena")->nullable(false);
         });
 
         // Insertar datos de ejemplo
-        DB::table('paciente')->insert([
+        /*DB::table('paciente')->insert([
             'cedula' => '1234567890',
             'nombre' => 'Juan Perez',
             'edad' => 30,
@@ -33,7 +33,7 @@ return new class extends Migration
             'telefono' => '123456789',
             'email' => 'juan@example.com',
             'contrasena' => 'pedro123'
-        ]);
+        ]);*/
     }
 
     /**

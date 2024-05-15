@@ -31,14 +31,14 @@ return new class extends Migration
                 
                 
             });
-            DB::table('expediente')->insert([
+            /*DB::table('expediente')->insert([
                 'tipoSangre' => 'A',
                 'alergia' => 'Many',
                 'padecimiento' => 'Calentura',
                 'medicamento' => 'Bigvaporu',
                 'PacienteID' => 1,
                 
-            ]);
+            ]);*/
           
         }
     

@@ -30,7 +30,7 @@ return new class extends Migration
             
         });
 
-        DB::table('medico')->insert([
+        /*DB::table('medico')->insert([
             'numColegiado' => '1558',
             'cedula' => '504350769',
             'nombre' => 'Kevin Salazar Bravo',
@@ -38,7 +38,7 @@ return new class extends Migration
             'telefono' => '123456789',
             'email' => 'kevin@example.com',
             'contrasena'=> 'ickkck'
-        ]);
+        ]);*/
     }
 
     /**

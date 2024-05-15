@@ -20,13 +20,14 @@ class JwtAuth
 
     public function getTokenPac($cedula, $contrasena)
     {
-        $paciente = paciente::where(['cedula' => $cedula, 'contrasena' => $contrasena])->first();
+        $paciente = paciente::where(['cedula' => $cedula, 'contrasena' => hash('sha256', $contrasena)])->first();
 
         if (is_object($paciente)) {
             $token = array(
                 'iss' => $paciente->idPaciente,
                 'cedula' => $paciente->cedula,
                 'nombre' => $paciente->nombre,
+                'tipo' => 'paciente',
                 'exp' => time() + (1200000) //Equivale a 20 minutos
             );
             $response = JWT::encode($token, $this->key, 'HS256');
@@ -51,7 +52,7 @@ class JwtAuth
             } catch (ExpiredException $ex) {
                 $authFlag = false;
             }
-            if (!empty($decoded) && is_object($decoded) && isset($decoded->iss)) {
+            if (!empty($decoded) && is_object($decoded) && isset($decoded->iss) && $decoded->tipo == 'paciente') {
                 $authFlag = true;
             }
             if ($getId && $authFlag) {
@@ -63,13 +64,14 @@ class JwtAuth
 
     public function getTokenMed($cedula, $contrasena)
     {
-        $medico = Medico::where(['cedula' => $cedula, 'contrasena' => $contrasena])->first();
+        $medico = Medico::where(['cedula' => $cedula, 'contrasena' => hash('sha256', $contrasena)])->first();
 
         if (is_object($medico)) {
             $token = array(
                 'iss' => $medico->idMedico,
                 'cedula' => $medico->cedula,
                 'nombre' => $medico->nombre,
+                'tipo' => 'medico',
                 'exp' => time() + (1200000) //Equivale a 20 minutos
             );
             $response = JWT::encode($token, $this->key, 'HS256');
@@ -94,7 +96,7 @@ class JwtAuth
             } catch (ExpiredException $ex) {
                 $authFlag = false;
             }
-            if (!empty($decoded) && is_object($decoded) && isset($decoded->iss)) {
+            if (!empty($decoded) && is_object($decoded) && isset($decoded->iss) && $decoded->tipo == 'medico') {
                 $authFlag = true;
             }
             if ($getId && $authFlag) {

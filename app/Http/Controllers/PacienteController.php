@@ -177,7 +177,7 @@ class PacienteController extends Controller
 
         if (!$isValid->fails()) {
             $jwt =  new JwtAuth();
-            $response = $jwt->getTokenPac( $request->cedula,$request->contrasena);
+            $response = $jwt->getTokenPac($request->cedula, $request->contrasena);
             return response()->json($response);
         } else {
             $response = array(
@@ -187,5 +187,53 @@ class PacienteController extends Controller
             );
             return response()->json($response, 406);
         }
+    }
+
+    public function registerPac(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            "cedula" => 'required|unique:paciente',
+            "nombre" => 'required',
+            "edad" => 'required',
+            "direccion" => 'required',
+            "telefono" => 'required|digits:12',
+            "email" => 'required|email',
+            "contrasena" => "required"
+        ]);
+
+        if ($validator->fails()) {
+            $data = [
+                'message' => 'Error en la validación de datos',
+                'errors' => $validator->errors(),
+                'status' => 400
+            ];
+            return response()->json($data, 400);
+        }
+
+        $paciente = Paciente::create([
+            "cedula" => $request->cedula,
+            "nombre" => $request->nombre,
+            "edad" => $request->edad,
+            "direccion" => $request->direccion,
+            "telefono" => $request->telefono,
+            "email" => $request->email,
+            "contrasena" => hash('sha256', $request->contrasena),
+        ]);
+
+        if (!$paciente) {
+            $data = [
+                'message' => 'Error al guardar el paciente',
+                'status' => 500
+            ];
+            return response()->json($data, 500);
+        }
+
+        $data = [
+            'message' => 'Paciente creado correctamente',
+            'paciente' =>  $paciente,
+            'status' => 201
+        ];
+
+        return response()->json($data, 201);
     }
 }
