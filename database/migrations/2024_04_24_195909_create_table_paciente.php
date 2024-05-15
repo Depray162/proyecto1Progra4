@@ -1,9 +1,9 @@
 <?php
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
-
 
 return new class extends Migration
 {
@@ -12,11 +12,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        
+
         Schema::create('paciente', function (Blueprint $table) {
             $table->id('idPaciente');
-            $table->string("cedula",12)->nullable(false)->unique();
-            $table->string("nombre",60)->nullable(false);
+            $table->string("cedula", 12)->nullable(false)->unique();
+            $table->string("nombre", 60)->nullable(false);
             $table->integer("edad")->nullable(false);
             $table->text("direccion");
             $table->string("telefono", 12);

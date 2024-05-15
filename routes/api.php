@@ -19,26 +19,46 @@ Route::get('/user', function (Request $request) {
 Route::prefix('v1')->group(
     function () {
         //Rutas expecificas
-        Route::post('/paciente/registerPac', [PacienteController::class, 'registerPac']);
-        Route::post('/paciente/login', [PacienteController::class, 'login'])->withoutMiddleware([ApiAuthMiddlewarePac::class, ApiAuthMiddlewareVerifyPac::class]);
-        Route::get('/paciente/{id}', [PacienteController::class,'show'])->middleware([ApiAuthMiddlewarePac::class, ApiAuthMiddlewareVerifyPac::class]);
-        Route::put('/paciente/{id}', [PacienteController::class,'update'])->middleware([ApiAuthMiddlewarePac::class, ApiAuthMiddlewareVerifyPac::class]);
-        Route::post('/medico/registerMed', [MedicoController::class,'registerMed']);
-        Route::post('/medico/loginMed', [MedicoController::class, 'loginMed'])->withoutMiddleware([ApiAuthMiddlewareMed::class, ApiAuthMiddlewareVerifyMed::class]);
-        Route::get('/medico/{id}', [MedicoController::class,'show'])->middleware([ApiAuthMiddlewareMed::class, ApiAuthMiddlewareVerifyMed::class]);
-        Route::put('/medico/{id}', [MedicoController::class,'update'])->middleware([ApiAuthMiddlewareMed::class, ApiAuthMiddlewareVerifyMed::class]);
 
-        //rutas del paciente
-        Route::get('/paciente/VerExpediente/', [PacienteController::class,'VerExpedienteP'])->middleware(ApiAuthMiddlewarePac::class);
+        //Rutas de paciente
+        Route::group(['prefix' => '/paciente'], function () {
+            Route::post('/registerPac', [PacienteController::class, 'registerPac']);
+            Route::post('/loginPac', [PacienteController::class, 'loginPac'])->withoutMiddleware([ApiAuthMiddlewarePac::class, ApiAuthMiddlewareVerifyPac::class]);
+            Route::get('/{id}', [PacienteController::class, 'show'])->middleware([ApiAuthMiddlewarePac::class, ApiAuthMiddlewareVerifyPac::class]);
+            Route::put('/{id}', [PacienteController::class, 'update'])->middleware([ApiAuthMiddlewarePac::class, ApiAuthMiddlewareVerifyPac::class]);
+            Route::get('/cita/index', [CitaController::class, 'indexCitaPac'])->middleware(ApiAuthMiddlewarePac::class);
+            Route::post('/cita/agregar', [CitaController::class, 'store'])->middleware(ApiAuthMiddlewarePac::class);
+            Route::get('/cita/{id}', [CitaController::class, 'showCitaPac'])->middleware(ApiAuthMiddlewarePac::class);
+            Route::put('/cita/actualizar/{id}', [CitaController::class, 'updateCitaPac'])->middleware(ApiAuthMiddlewarePac::class);
+            Route::delete('/cita/eliminar/{id}', [CitaController::class, 'destroyCitaPac'])->middleware(ApiAuthMiddlewarePac::class);
+            Route::get('/verExpediente', [PacienteController::class, 'VerExpedienteP'])->middleware(ApiAuthMiddlewarePac::class);
+        });
 
-       //ruta de medico/verCitas
-       Route::get('/medico/verCitas', [MedicoController::class, 'verCitas'])->middleware(ApiAuthMiddlewareMed::class);
+        //Rutas de medico
+        Route::group(['prefix' => '/medico'], function () {
+            Route::post('/registerMed', [MedicoController::class, 'registerMed']);
+            Route::post('/loginMed', [MedicoController::class, 'loginMed'])->withoutMiddleware([ApiAuthMiddlewareMed::class, ApiAuthMiddlewareVerifyMed::class]);
+            Route::get('/{id}', [MedicoController::class, 'show'])->middleware([ApiAuthMiddlewareMed::class, ApiAuthMiddlewareVerifyMed::class]);
+            Route::put('/{id}', [MedicoController::class, 'update'])->middleware([ApiAuthMiddlewareMed::class, ApiAuthMiddlewareVerifyMed::class]);
+            Route::get('/cita/todas', [CitaController::class, 'indexCitaMed'])->middleware(ApiAuthMiddlewarePac::class);
+            Route::get('/cita/{id}', [CitaController::class, 'showCitaMed'])->middleware(ApiAuthMiddlewareMed::class);
+            Route::get('/verCitas', [MedicoController::class, 'verCitas'])->middleware(ApiAuthMiddlewareMed::class);
+            Route::get('/expediente/index', [ExpedienteController::class, 'index'])->middleware(ApiAuthMiddlewarePac::class);
+            Route::post('/expediente/agregar', [ExpedienteController::class, 'store'])->middleware(ApiAuthMiddlewareMed::class);
+            Route::get('/expediente/{id}', [ExpedienteController::class, 'show'])->middleware(ApiAuthMiddlewareMed::class);
+            Route::put('/expediente/actualizar/{id}', [ExpedienteController::class, 'update'])->middleware(ApiAuthMiddlewareMed::class);
+            Route::delete('/expediente/actualizar/{id}', [ExpedienteController::class, 'delete'])->middleware(ApiAuthMiddlewareMed::class);
+        });
 
-        //rutas automaticas
-        Route::resource('/paciente', PacienteController::class, ['except' => ['create', 'edit', 'show', 'update', 'login', 'registerPac']])->middleware([ApiAuthMiddlewarePac::class, ApiAuthMiddlewareVerifyPac::class]);
-        Route::resource('/medico', MedicoController::class, ['Except' => ['create', 'edit', 'show', 'update', 'loginMed', 'registerMed']])->middleware([ApiAuthMiddlewareMed::class, ApiAuthMiddlewareVerifyMed::class]);
-        Route::resource('/cita', CitaController::class, ['Except' => ['create', 'edit']])->middleware([ApiAuthMiddlewarePac::class, ApiAuthMiddlewareVerifyPac::class, ApiAuthMiddlewareMed::class, ApiAuthMiddlewareVerifyMed::class]);
-        Route::resource('/historial', HistorialController::class, ['Except' => ['create', 'edit']])->middleware([ApiAuthMiddlewareMed::class, ApiAuthMiddlewareVerifyMed::class]);
-        route::resource('/expediente', ExpedienteController::class, ['Except' => ['create', 'edit']])->middleware([ApiAuthMiddlewareMed::class, ApiAuthMiddlewareVerifyMed::class]);
+        //Rutas administrador Eddier (el mejor)
+        Route::group(['prefix' => '/administrador'], function () {
+            Route::resource('/paciente', PacienteController::class, ['except' => ['create', 'edit']]);
+            Route::resource('/medico', MedicoController::class, ['Except' => ['create', 'edit']]);
+            Route::resource('/cita', CitaController::class, ['Except' => ['create', 'edit']]);
+            Route::resource('/historial', HistorialController::class, ['Except' => ['create', 'edit']]);
+            route::resource('/expediente', ExpedienteController::class, ['Except' => ['create', 'edit']]);
+        });
+
+        //Rutas automaticas
     }
 );

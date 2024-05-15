@@ -31,7 +31,7 @@ class ApiAuthMiddlewareVerifyPac
         } else {
             $response = [
                 "status" => 400,
-                "message" => "No tiene autorizacion",
+                "message" => "No tiene autorizacion pac",
             ];
             return response()->json($response, 400);
         }
