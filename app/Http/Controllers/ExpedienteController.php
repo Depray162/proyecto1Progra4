@@ -38,7 +38,6 @@ class ExpedienteController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            "idExpediente" => 'required',
             "tipoSangre" => 'required',
             "alergia" => 'required', // Corregido el nombre del campo
             "padecimiento" => 'required',
@@ -55,7 +54,6 @@ class ExpedienteController extends Controller
         }
 
         $expediente = Expediente::create([
-            "idExpediente" => $request->idExpediente,
             "tipoSangre" => $request->tipoSangre,
             "alergia" => $request->alergia,
             "padecimiento" => $request->padecimiento,
@@ -76,18 +74,60 @@ class ExpedienteController extends Controller
     public function show($id)
     {
         $expediente = Expediente::with(["historiales"])->where("idExpediente", $id)->first();
-    
-        
+
         if (!$expediente) {
             return response()->json(['message' => 'Expediente no encontrado'], 404);
         }
-        
+
         return response()->json($expediente, 200);
     }
 
+    public function update(Request $request, $id)
+    {
 
-    
-    
+        $expediente = Expediente::find($id);
+
+        if (!$expediente) {
+            $data = [
+                'message' => 'Medico no encontrado',
+                'status' => 404
+            ];
+            return response()->json($data, 404);
+        }
+        $validator = Validator::make(
+            $request->all(),
+            [
+                "tipoSangre" => 'required',
+                "alergia" => 'required',
+                "padecimiento" => 'required',
+                "medicamento" => 'required',
+            ]
+        );
+        if ($validator->fails()) {
+            $data =
+                [
+                    'message' => 'Error en la validacion de los datos',
+                    'error' => $validator->errors(),
+                    'status' => 400
+                ];
+            return response()->json($data, 400);
+        }
+
+        $expediente->tipoSangre = $request->tipoSangre;
+        $expediente->alergia = $request->alergia;
+        $expediente->padecimiento = $request->padecimiento;
+        $expediente->medicamento = $request->medicamento;
+
+        $expediente->save();
+
+        $data = [
+            'message' => 'Datos del medico actualizados.',
+            'medico' => $expediente,
+            'status' => 200
+        ];
+        return response()->json($data, 200);
+    }
+
     /**
      * Remove the specified resource from storage.
      */
@@ -103,54 +143,27 @@ class ExpedienteController extends Controller
 
         return response()->json(['message' => 'Expediente eliminado correctamente'], 200);
     }
-    public function update(Request $request, $id)
+
+    public function showExpedientePac(Request $request)
     {
+        $jwt = new JwtAuth();
+        $idPac = $jwt->verifyTokenPac($request->bearerToken(), true);
 
-        $expediente = Expediente::find($id);
+        $expediente = Expediente::with(["paciente", "historial"])->where("PacienteID", $idPac->iss)->get();
 
-        if(!$expediente)
-        {
-            $data = [
-                'message' => 'Medico no encontrado',
-                'status' => 404
+        if ($expediente->isEmpty()) {
+            $response = [
+                'message' => 'Expediente no existente',
+                'status' => 200
             ];
-            return response()->json($data, 404);
-        }
-        $validator= Validator::make($request->all(), 
-        [
-            
-            "tipoSangre" => 'required',
-            "alergia" => 'required',
-            "padecimiento" => 'required',
-            "medicamento" => 'required',
-          
-        ]);
-        if ($validator->fails())
-        {
-            $data = 
-            [
-                'message' => 'Error en la validacion de los datos',
-                'error' => $validator->errors(),
-                'status' => 400
+            return response()->json($response, 200);
+        } else {
+            $response = [
+                'message' => 'Expediente obtenido correctamente',
+                'status' => 200,
+                'data' => $expediente
             ];
-            return response()->json($data, 400);
+            return response()->json($response, 200);
         }
-       
-        
-        $expediente->idExpediente = $request->idExpediente;
-        $expediente->tipoSangre = $request->tipoSangre; 
-        $expediente->alergia = $request->alergia; 
-        $expediente->padecimiento = $request->padecimiento; 
-        $expediente->medicamento = $request->medicamento;
-        
-
-        $expediente->save();
-
-        $data = [
-            'message' => 'Datos del medico actualizados.',
-            'medico' => $expediente,
-            'status'=> 200
-        ];
-        return response()->json($data, 200);
     }
 }

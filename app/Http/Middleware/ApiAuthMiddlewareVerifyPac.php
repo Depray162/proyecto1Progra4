@@ -31,7 +31,7 @@ class ApiAuthMiddlewareVerifyPac
         } else {
             $response = [
                 "status" => 400,
-                "message" => "No tiene autorizacion pac",
+                "message" => "El paciente no tiene autorizacion para acceder al perfil de otro paciente",
             ];
             return response()->json($response, 400);
         }

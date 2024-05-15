@@ -25,7 +25,7 @@ class ApiAuthMiddlewareVerifyMed
         } else {
             $response = [
                 "status" => 400,
-                "message" => "No tiene autorizacion med",
+                "message" => "El medico no tiene autorizacion para acceder al perfil de otro medico",
             ];
             return response()->json($response, 400);
         }

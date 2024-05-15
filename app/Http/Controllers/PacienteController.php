@@ -7,7 +7,7 @@ use App\Helpers\JwtAuth;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Validator;
-use App\Models\Expediente;
+
 class PacienteController extends Controller
 {
     /**
@@ -96,20 +96,6 @@ class PacienteController extends Controller
         }
 
         return response()->json($paciente, 200);
-    }
-    public function VerExpedienteP(Request $request)    
-    {
-        
-        $jwt = new JwtAuth();
-        $logged = $jwt->verifyTokenPac( $request->bearerToken(),true );  
-       
-        $expediente = Expediente::where("PacienteID", $logged->iss )->first();
-    
-        if (!$expediente) {
-            return response()->json(['message' => 'Expediente no encontrado a'], 404);
-        }
-    
-        return response()->json($expediente, 200);
     }
 
     /**

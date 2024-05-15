@@ -7,8 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Helpers\JwtAuth;
 
-
-
 class CitaController extends Controller
 {
 
@@ -17,9 +15,9 @@ class CitaController extends Controller
      */
     public function index()
     {
-        $citas = cita::with(["paciente", "medico", "historial"])->get();
+        $cita = cita::with(["paciente", "medico", "historial"])->get();
 
-        if ($citas->isEmpty()) {
+        if ($cita->isEmpty()) {
             $response = [
                 'message' => 'Citas no existentes',
                 'status' => 200
@@ -29,7 +27,7 @@ class CitaController extends Controller
             $response = [
                 'message' => 'Citas obtenidas correctamente',
                 'status' => 200,
-                'data' => $citas
+                'data' => $cita
             ];
             return response()->json($response, 200);
         }
@@ -48,15 +46,13 @@ class CitaController extends Controller
      */
     public function store(Request $request)
     {
-        $jwt = new JwtAuth();
-        $idPac = $jwt->verifyTokenPac($request->bearerToken(), true);
-
         $validator = Validator::make($request->all(), [
             'motivo' => 'required',
             'area' => 'required',
             'fechaSolicitud' => 'required',
             'fechaCita' => 'required',
             'horaCita' => 'required',
+            'idPaciente' => 'exists:paciente,idPaciente',
             'idMedico' => 'exists:medico,idMedico',
         ]);
 
@@ -75,7 +71,7 @@ class CitaController extends Controller
             'fechaSolicitud' => $request->fechaSolicitud,
             'fechaCita' => $request->fechaCita,
             'horaCita' => $request->horaCita,
-            'idPaciente' => $idPac->iss,
+            'idPaciente' => $request->idPaciente,
             'idMedico' => $request->idMedico
         ]);
 
@@ -143,6 +139,7 @@ class CitaController extends Controller
             'fechaSolicitud' => 'required',
             'fechaCita' => 'required',
             'horaCita' => 'required',
+            'idPaciente' => 'exists:paciente,idPaciente',
         ]);
 
         if ($validator->fails()) {
@@ -159,6 +156,7 @@ class CitaController extends Controller
         $cita->fechaSolicitud = $request->fechaSolicitud;
         $cita->fechaCita = $request->fechaCita;
         $cita->horaCita = $request->horaCita;
+        $cita->idPaciente = $request->idPaciente;
 
         $cita->save();
 
@@ -215,6 +213,55 @@ class CitaController extends Controller
             ];
             return response()->json($response, 200);
         }
+    }
+
+    public function storeCitaPac(Request $request)
+    {
+        $jwt = new JwtAuth();
+        $idPac = $jwt->verifyTokenPac($request->bearerToken(), true);
+
+        $validator = Validator::make($request->all(), [
+            'motivo' => 'required',
+            'area' => 'required',
+            'fechaSolicitud' => 'required',
+            'fechaCita' => 'required',
+            'horaCita' => 'required',
+            'idMedico' => 'exists:medico,idMedico',
+        ]);
+
+        if ($validator->fails()) {
+            $response = [
+                'message' => 'Error al validar los datos',
+                'errors' => $validator->errors(),
+                'status' => 400
+            ];
+            return response()->json($response, 400);
+        }
+
+        $cita = cita::create([
+            'motivo' => $request->motivo,
+            'area' => $request->area,
+            'fechaSolicitud' => $request->fechaSolicitud,
+            'fechaCita' => $request->fechaCita,
+            'horaCita' => $request->horaCita,
+            'idPaciente' => $idPac->iss,
+            'idMedico' => $request->idMedico
+        ]);
+
+        if (!$cita) {
+            $response = [
+                'message' => 'Error al crear la cita',
+                'status' => 500,
+            ];
+            return response()->json($response, 500);
+        }
+
+        $response = [
+            'message' => 'Cita creada correctamente',
+            'status' => 201,
+            'cita' => $cita,
+        ];
+        return response()->json($response, 201);
     }
 
     public function showCitaPac($id, Request $request)
@@ -304,6 +351,48 @@ class CitaController extends Controller
         $response = [
             'message' => 'Cita eliminada correctamente',
             'status' => 200
+        ];
+        return response()->json($response, 200);
+    }
+
+    public function indexCitaMed(Request $request)
+    {
+        $jwt = new JwtAuth();
+        $idMed = $jwt->verifyTokenMed($request->bearerToken(), true);
+
+        $citas = cita::with(["paciente", "medico", "historial"])->where("idMedico", $idMed->iss)->get();
+
+        if ($citas->isEmpty()) {
+            $response = [
+                'message' => 'Citas no existentes',
+                'status' => 200
+            ];
+            return response()->json($response, 200);
+        } else {
+            $response = [
+                'message' => 'Citas obtenidas correctamente',
+                'status' => 200,
+                'data' => $citas
+            ];
+            return response()->json($response, 200);
+        }
+    }
+
+    public function showCitaMed($id, Request $request)
+    {
+        $jwt = new JwtAuth();
+        $idMed = $jwt->verifyTokenMed($request->bearerToken(), true);
+
+        $cita = Cita::with(["paciente", "medico", "historial"])->where(["idCita" => $id, "idMedico" => $idMed->iss])->first();
+
+        if (!$cita) {
+            return response()->json(['message' => 'cita no encontrada'], 404);
+        }
+
+        $response = [
+            'message' => 'Cita encontrada correctamente',
+            'status' => 201,
+            'cita' => $cita,
         ];
         return response()->json($response, 200);
     }
