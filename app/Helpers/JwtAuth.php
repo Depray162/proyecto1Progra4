@@ -28,7 +28,7 @@ class JwtAuth
                 'cedula' => $paciente->cedula,
                 'nombre' => $paciente->nombre,
               'tipo' => 'paciente',
-                'exp' => time() + (20 * 60)//Equivale a 20 minutos
+                'exp' => time() + (1200000) //(20 * 60) //Equivale a 20 minutos
             );
             $response = JWT::encode($token, $this->key, 'HS256');
         } else {
@@ -73,7 +73,7 @@ class JwtAuth
                 'cedula' => $medico->cedula,
                 'nombre' => $medico->nombre,
               'tipo' => 'medico',
-                'exp' => time() + (20 * 60)//Equivale a 20 minutos
+                'exp' => time() + (1200000)//(20 * 60) //Equivale a 20 minutos
             );
             $response = JWT::encode($token, $this->key, 'HS256');
         } else {

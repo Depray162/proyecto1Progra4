@@ -22,12 +22,9 @@ return new class extends Migration
             $table->string('cedula', 12)->nullable();
             $table->text('nombre')->nullable();
             $table->string('especialidad', 60)->nullable();
-
-            $table->string('telefono', 12);
+            $table->string('telefono', max(0,12));
             $table->text('email');
-           $table->string('contrasena',12)->nullable();
-          
-            
+           $table->string('contrasena', 255);
         });
 
         /*DB::table('medico')->insert([
