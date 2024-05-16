@@ -14,7 +14,7 @@ class ExpedienteController extends Controller
      */
     public function index()
     {
-        $expedientes = Expediente::with(["historiales"])->get();
+        $expedientes = Expediente::with(["historial"])->get();
 
         if ($expedientes->isEmpty()) {
             $response = [
@@ -73,7 +73,7 @@ class ExpedienteController extends Controller
      */
     public function show($id)
     {
-        $expediente = Expediente::with(["historiales"])->where("idExpediente", $id)->first();
+        $expediente = Expediente::with(["historial"])->where("idExpediente", $id)->first();
 
         if (!$expediente) {
             return response()->json(['message' => 'Expediente no encontrado'], 404);
@@ -89,7 +89,7 @@ class ExpedienteController extends Controller
 
         if (!$expediente) {
             $data = [
-                'message' => 'Medico no encontrado',
+                'message' => 'Expediente no encontrado',
                 'status' => 404
             ];
             return response()->json($data, 404);
@@ -121,7 +121,7 @@ class ExpedienteController extends Controller
         $expediente->save();
 
         $data = [
-            'message' => 'Datos del medico actualizados.',
+            'message' => 'Datos del expediente actualizados.',
             'medico' => $expediente,
             'status' => 200
         ];
