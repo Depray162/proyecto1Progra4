@@ -7,32 +7,32 @@ use Illuminate\Database\Eloquent\Model;
 
 class Expediente extends Model
 {
-   use HasFactory;
+    use HasFactory;
 
     protected $table = "expediente";
 
     protected $primaryKey = "idExpediente";
     public $timestamps = false;
     protected $fillable = [
-    
+
         "idExpediente",
         "tipoSangre",
         "alergia",
         "padecimiento",
-        "medicamento",        
+        "medicamento",
         "PacienteID"
     ];
 
-    public function paciente(){
-        return $this->belongsTo(paciente::class,"PacienteID");
+    public function paciente()
+    {
+        return $this->belongsTo(paciente::class, "PacienteID");
     }
     public function citas()
     {
         return $this->hasMany(cita::class, "idPaciente");
     }
-    public function historiales()
+    public function historial()
     {
         return $this->hasMany(Historial::class, "idExpediente");
     }
-
 }
