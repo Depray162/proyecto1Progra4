@@ -32,7 +32,7 @@ class Historial extends Model
     }
     public function expediente()
     {
-        return $this->belongsTo(Expediente::class, 'idExpediente');
+        return $this->belongsTo(Expediente::class);
     }
     
     

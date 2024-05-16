@@ -25,8 +25,7 @@ return new class extends Migration
 
             $table->foreign('idCita')->references('idCita')->on('cita');
 
-            $table->foreign('idExpediente')->references('idExpediente')->on('expediente');
-
+            $table->foreign('idExpediente')->references('idExpediente')->on('expediente')->onDelete('Cascade');
 
         });
 

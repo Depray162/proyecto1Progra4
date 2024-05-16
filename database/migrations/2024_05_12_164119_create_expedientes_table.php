@@ -16,7 +16,6 @@ return new class extends Migration
          * Run the migrations.
          */
         
-        
             Schema::create('expediente', function (Blueprint $table) {
                 $table->id('idExpediente');
                 $table->string("tipoSangre", 3)->nullable(false);
@@ -24,11 +23,8 @@ return new class extends Migration
                 $table->text("padecimiento")->nullable(false);
                 $table->text("medicamento")->nullable(false);
                 $table->unsignedBigInteger('PacienteID')->unique();
-                
-
+            
                 $table->foreign('PacienteID')->references('idPaciente')->on('paciente');
-                
-                
                 
             });
             /*DB::table('expediente')->insert([
